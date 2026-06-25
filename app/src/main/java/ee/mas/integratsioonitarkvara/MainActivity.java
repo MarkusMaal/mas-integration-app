@@ -23,6 +23,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import ee.mas.integratsioonitarkvara.models.CommonConfig;
+import ee.mas.integratsioonitarkvara.models.DesktopLayout;
 import ee.mas.integratsioonitarkvara.models.Edition;
 import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
 import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static MarkuStationConfig markuStationConfig;
 
     private static MarkuStationGame[] markuStationGames;
+    private static DesktopLayout desktopLayout;
 
     private enum Tabs {
         WELCOME,
@@ -73,12 +75,13 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.pager);
         TabCollectionAdapter tabCollectionAdapter = new TabCollectionAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager.setAdapter(tabCollectionAdapter);
+        //viewPager.setUserInputEnabled(false);
 
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (Tabs.values()[position]) {
                 case WELCOME:
-                    tab.setText("Avaleht");
+                    tab.setText("Uudised");
                     break;
                 case MARKUSTATION:
                     tab.setText("MarkuStation");
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        getSupportActionBar().hide();
     }
 
 
@@ -113,12 +117,13 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (Tabs.values()[position]) {
                 case WELCOME:
-                case DESKTOP:
                     return new Welcome();
                 case MARKUSTATION:
                     return new MarkuStationFragment(markuStationConfig, markuStationGames);
                 case CONFIG:
                     return new ConfigFragment(config);
+                case DESKTOP:
+                    return new DesktopFragment(desktopLayout);
                 case ABOUT:
                     return new AboutFragment(edition);
             }
@@ -185,6 +190,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<MarkuStationGame[]> call, @NonNull Throwable t) {
+
+            }
+        });
+
+        apiService.getDesktopLayout().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<DesktopLayout> call, @NonNull Response<DesktopLayout> response) {
+                if (!response.isSuccessful()) return;
+                desktopLayout = response.body();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<DesktopLayout> call, @NonNull Throwable t) {
 
             }
         });

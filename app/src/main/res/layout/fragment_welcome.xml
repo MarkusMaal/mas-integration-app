@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".Welcome">
 
-    <TextView
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Tere tulemast" />
+        android:scrollbars="vertical" />
 
 </FrameLayout>

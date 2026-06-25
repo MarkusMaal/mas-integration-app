@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Integratsioon</string>
+    <string name="app_name_long">Markuse asjad</string>
     <string-array name="monitor_modes_array">
         <item>Ainult peamine ekraan</item>
         <item>Ainult väline ekraan</item>
