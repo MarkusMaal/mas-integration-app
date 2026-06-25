@@ -1,23 +1,31 @@
 package ee.mas.integratsioonitarkvara;
 
+import android.app.ComponentCaller;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EdgeEffect;
-import android.widget.EditText;
-import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import ee.mas.integratsioonitarkvara.models.CommonConfig;
 import ee.mas.integratsioonitarkvara.models.Edition;
+import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
+import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
 import ee.mas.integratsioonitarkvara.services.ApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,13 +35,65 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static CommonConfig config;
+    private static Edition edition;
+    private static MarkuStationConfig markuStationConfig;
+
+    private static MarkuStationGame[] markuStationGames;
+
+    private enum Tabs {
+        WELCOME,
+        MARKUSTATION,
+        CONFIG,
+        DESKTOP,
+        ABOUT
+    }
+
+
+    @Override
+    public void onNewIntent(@NonNull Intent intent, @NonNull ComponentCaller caller) {
+        Refresh();
+        super.onNewIntent(intent, caller);
+    }
+
+    @Override
+    protected void onRestart() {
+        Refresh();
+        super.onRestart();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Refresh();
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this, SystemBarStyle.dark(ContextCompat.getColor(this, R.color.purple_700)));
         setContentView(R.layout.activity_main);
 
-        Refresh();
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager2 viewPager = findViewById(R.id.pager);
+        TabCollectionAdapter tabCollectionAdapter = new TabCollectionAdapter(getSupportFragmentManager(), getLifecycle());
+        viewPager.setAdapter(tabCollectionAdapter);
+
+
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (Tabs.values()[position]) {
+                case WELCOME:
+                    tab.setText("Avaleht");
+                    break;
+                case MARKUSTATION:
+                    tab.setText("MarkuStation");
+                    break;
+                case CONFIG:
+                    tab.setText("Konfiguratsioon");
+                    break;
+                case DESKTOP:
+                    tab.setText("Töölaud");
+                    break;
+                case ABOUT:
+                    tab.setText("Teave");
+                    break;
+            }
+        }).attach();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -41,6 +101,36 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
+
+
+    public static class TabCollectionAdapter extends FragmentStateAdapter {
+        public TabCollectionAdapter(FragmentManager fragment, Lifecycle lc) {
+            super(fragment, lc);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch (Tabs.values()[position]) {
+                case WELCOME:
+                case DESKTOP:
+                    return new Welcome();
+                case MARKUSTATION:
+                    return new MarkuStationFragment(markuStationConfig, markuStationGames);
+                case CONFIG:
+                    return new ConfigFragment(config);
+                case ABOUT:
+                    return new AboutFragment(edition);
+            }
+            return new Fragment();
+        }
+
+        @Override
+        public int getItemCount() {
+            return Tabs.values().length;
+        }
+    }
+
 
     public void Refresh() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -52,88 +142,50 @@ public class MainActivity extends AppCompatActivity {
 
         apiService.getConfig().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<CommonConfig> call, Response<CommonConfig> response) {
+            public void onResponse(@NonNull Call<CommonConfig> call, @NonNull Response<CommonConfig> response) {
                 if (!response.isSuccessful()) return;
-                CommonConfig config = response.body();
-                CheckBox logoCheck = findViewById(R.id.logoCheckbox);
-                CheckBox scheduleCheck = findViewById(R.id.scheduleCheckbox);
-                CheckBox notesCheck = findViewById(R.id.desktopNotesCheckbox);
-                EditText pollRate = findViewById(R.id.pollRateTextbox);
-                logoCheck.setChecked(config.isShowLogo());
-                scheduleCheck.setChecked(config.isAllowScheduledTasks());
-                notesCheck.setChecked(config.isAutostartNotes());
-                pollRate.setText(String.valueOf(config.getPollRate()));
+                config = response.body();
             }
 
             @Override
-            public void onFailure(Call<CommonConfig> call, Throwable t) {
-                TextView tv = findViewById(R.id.textView);
-                tv.setText("Error: " + t.getMessage());
+            public void onFailure(@NonNull Call<CommonConfig> call, @NonNull Throwable t) {
             }
         });
 
         apiService.getEdition().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<Edition> call, Response<Edition> response) {
+            public void onResponse(@NonNull Call<Edition> call, @NonNull Response<Edition> response) {
                 if (!response.isSuccessful()) return;
-                Edition edition = response.body();
-                TextView tv = findViewById(R.id.textView);
-                StringBuilder sb = new StringBuilder();
-                sb.append("Väljaanne: ").append(edition.getEditionName()).append("\n");
-                sb.append("Versioon: ").append(edition.getVersion()).append("\n");
-                sb.append("Nimi: ").append(edition.getName()).append("\n");
-                sb.append("Järk: ").append(edition.getBuildNo()).append("\n");
-                sb.append("Testitud: ").append(edition.isTested() ? "Jah" : "Ei").append("\n");
-                sb.append("Kasutajanimi: ").append(edition.getUsername()).append("\n");
-                sb.append("Keel: ").append(edition.getLanguage()).append("\n");
-                sb.append("Tuuma versioon: ").append(edition.getWinVer()).append("\n");
-                sb.append("Funktsioonid: ").append('\n');
-                for (var f : edition.getFeatures()) {
-                    switch (f) {
-                        case "IP":
-                            sb.append(" - Integratsioonitarkvara\n");
-                            break;
-                        case "WX":
-                            sb.append(" - Windows 10+\n");
-                            break;
-                        case "RM":
-                            sb.append(" - Rainmeter\n");
-                            break;
-                        case "GP":
-                            sb.append(" - Grupipoliitika\n");
-                            break;
-                        case "LT":
-                            sb.append(" - LiveTuner optimeerimised\n");
-                            break;
-                        case "DX":
-                            sb.append(" - DesktopX\n");
-                            break;
-                        case "CS":
-                            sb.append(" - Klassikaline start menüü\n");
-                            break;
-                        case "RD":
-                            sb.append(" - Kaugjuhtimine\n");
-                            break;
-                        case "TS":
-                            sb.append(" - Interaktiivne töölaud\n");
-                            break;
-                        case "MM":
-                            sb.append(" - Standardfunktsioonid\n");
-                            break;
-                        default:
-                            sb.append(" - ???\n");
-                            break;
-                    }
-                }
-                sb.append("Ebaturvaline PIN kood: ").append(edition.getPin()).append("\n");
-                sb.append("Verifile räsi: ").append(edition.getHash().substring(0, 10)).append("\n");
-                tv.setText(sb.toString());
+                edition = response.body();
             }
 
             @Override
-            public void onFailure(Call<Edition> call, Throwable t) {
-                TextView tv = findViewById(R.id.textView);
-                tv.setText("Error: " + t.getMessage());
+            public void onFailure(@NonNull Call<Edition> call, @NonNull Throwable t) {}
+        });
+
+        apiService.getMarkuStationConfig().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<MarkuStationConfig> call, @NonNull Response<MarkuStationConfig> response) {
+                if (!response.isSuccessful()) return;
+                markuStationConfig = response.body();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MarkuStationConfig> call, @NonNull Throwable t) {
+
+            }
+        });
+
+        apiService.getMarkuStationGames().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<MarkuStationGame[]> call, @NonNull Response<MarkuStationGame[]> response) {
+                if (!response.isSuccessful()) return;
+                markuStationGames = response.body();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MarkuStationGame[]> call, @NonNull Throwable t) {
+
             }
         });
     }

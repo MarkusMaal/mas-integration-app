@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:orientation="vertical"
+    android:id="@+id/config_fragment"
+    tools:context=".ConfigFragment">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16sp"
+        android:layout_marginTop="16sp"
+        android:text="Konfiguratsioon"
+        android:textSize="20sp" />
+
+    <CheckBox
+        android:id="@+id/logoCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:text="Kuva Markuse asjade logo käivitumisel" />
+
+    <CheckBox
+        android:id="@+id/scheduleCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:text="Luba ajastatud sündmused" />
+
+    <CheckBox
+        android:id="@+id/desktopNotesCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:text="Käivita töölauamärkmed käivitumisel" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:text="Pollimise sagedus: " />
+
+    <EditText
+        android:id="@+id/pollRateTextbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8sp"
+        android:layout_marginEnd="8sp"
+        android:ems="10"
+        android:inputType="number" />
+
+</LinearLayout>

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Integratsioon</string>
+    <string-array name="monitor_modes_array">
+        <item>Ainult peamine ekraan</item>
+        <item>Ainult väline ekraan</item>
+        <item>Laienda</item>
+        <item>Klooni</item>
+    </string-array>
 </resources>

@@ -8,5 +8,6 @@ Projekt on Alpha arendusjärgus.
 Implementeeritud funktsionaalsus:
 
 - Markuse arvuti asjade väljaande info kuvamine
-- Konfiguratsiooni kuvamine
+- Konfiguratsiooni kuvamine (sh MarkuStation)
+- Vahekaardipõhine kasutajaliides
 - Dünaamiline rakenduse ikoon
