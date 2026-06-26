@@ -14,4 +14,9 @@
     <string name="auth">Autentimine</string>
     <string name="port">Port</string>
     <string name="authcode">Autentimiskood</string>
+    <string name="mac_address">MAC aadress</string>
+    <string name="version">Versioon</string>
+    <string name="app_name_setting">Nimi</string>
+    <string name="packetFail">Arvuti äratamine nurjus</string>
+    <string name="packetSent">Arvuti äratamine...</string>
 </resources>

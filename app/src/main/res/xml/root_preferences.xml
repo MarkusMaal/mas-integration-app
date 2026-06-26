@@ -21,4 +21,31 @@
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="Äratus LANi kaudu">
+        <EditTextPreference
+            app:key="wol-mac"
+            app:title="@string/mac_address"
+            app:defaultValue="00:00:00:00:00:00"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="wol-port"
+            app:title="@string/port"
+            app:defaultValue="9"
+            app:useSimpleSummaryProvider="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Rakenduse teave">
+        <EditTextPreference
+            app:key="app-package"
+            app:title="@string/app_name_setting"
+            app:defaultValue="@string/app_name"
+            app:useSimpleSummaryProvider="true"
+            app:enabled="false"/>
+        <EditTextPreference
+            app:key="app-version"
+            app:title="@string/version"
+            app:defaultValue="@android:string/unknownName"
+            app:useSimpleSummaryProvider="true"
+            app:enabled="false"/>
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -7,6 +7,7 @@ import android.app.ComponentCaller;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,9 +28,13 @@ import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -158,6 +163,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         getSupportActionBar().hide();
+        try {
+            updateVersion();
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -258,6 +268,65 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         auth = sp.getString("code", "");
         return auth;
+    }
+
+    private void updateVersion() throws PackageManager.NameNotFoundException {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("app-version", getApplication().getBaseContext().getPackageManager().getPackageInfo(getApplication().getBaseContext().getPackageName(), 0).versionName);
+        editor.apply();
+    }
+
+    // copy-pasted from maia-app with minor modifications
+    public void wakeUp(View v) {
+        Thread thread = new Thread(() -> {
+            try {
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                var ip = sp.getString("ip", "192.168.1.201");
+                var wp = sp.getString("wol-port", "9");
+                var mac = sp.getString("wol-mac", "00:00:00:00:00:00").toUpperCase();
+                int port = Integer.parseInt(wp);
+                byte[] macBytes = getMacBytes(mac);
+                byte[] bytes = new byte[6 + 16 * macBytes.length];
+                for (int i = 0; i < 6; i++) {
+                    bytes[i] = (byte) 0xff;
+                }
+                for (int i = 6; i < bytes.length; i += macBytes.length) {
+                    System.arraycopy(macBytes, 0, bytes, i, macBytes.length);
+                }
+
+                InetAddress address = InetAddress.getByName(ip);
+                DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
+                DatagramSocket socket = new DatagramSocket();
+                socket.send(packet);
+                socket.close();
+
+                Snackbar snb = Snackbar.make(v, getString(R.string.packetSent), 2000);
+                snb.show();
+            } catch (Exception e) {
+                Snackbar snb = Snackbar.make(v, getString(R.string.packetFail) + " " + e.getMessage(), 2000);
+                snb.show();
+            }
+
+        });
+        thread.start();
+    }
+
+    private static byte[] getMacBytes(String macStr) throws IllegalArgumentException {
+        byte[] bytes = new byte[6];
+        String[] hex = macStr.split("(\\:|\\-)");
+        if (hex.length != 6) {
+            throw new IllegalArgumentException("Invalid MAC address.");
+        }
+        try {
+            for (int i = 0; i < 6; i++) {
+                bytes[i] = (byte) Integer.parseInt(hex[i], 16);
+            }
+        }
+        catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid hex digit in MAC address.");
+        }
+        return bytes;
     }
 
     public void appSettings(View view) {
