@@ -3,7 +3,6 @@ package ee.mas.integratsioonitarkvara;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -82,14 +81,17 @@ public class AboutFragment extends Fragment {
                 case "RD":
                     sb.append(" - Kaugjuhtimine\n");
                     break;
-                case "TS":
+                case "IT":
                     sb.append(" - Interaktiivne töölaud\n");
                     break;
-                case "MM":
+                case "TS":
                     sb.append(" - Standardfunktsioonid\n");
                     break;
+                case "MM":
+                    sb.append(" - Markuse asjade tugi\n");
+                    break;
                 default:
-                    sb.append(" - ???\n");
+                    sb.append(" - ??? \n");
                     break;
             }
         }
