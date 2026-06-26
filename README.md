@@ -9,5 +9,7 @@ Implementeeritud funktsionaalsus:
 
 - Markuse arvuti asjade väljaande info kuvamine
 - Konfiguratsiooni kuvamine (sh MarkuStation)
+- Seadistuste muutmine (MarkuStation ja Konfiguratsioon vahekaardid)
 - Vahekaardipõhine kasutajaliides
+- Seadete ekraan
 - Dünaamiline rakenduse ikoon
