@@ -1,5 +1,8 @@
 package ee.mas.integratsioonitarkvara;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -41,7 +44,19 @@ public class DesktopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         var view = inflater.inflate(R.layout.fragment_desktop, container, false);
-        if (desktopLayout == null) return view;
+        updateDesktop(desktopLayout, view);
+        return view;
+    }
+
+    public void updateDesktop(DesktopLayout desktopLayout, View view) {
+        this.desktopLayout = desktopLayout;
+        if (desktopLayout == null) {
+            view.findViewById(R.id.desktopLayoutContainer).setVisibility(GONE);
+            view.findViewById(R.id.error).setVisibility(VISIBLE);
+            return;
+        }
+        view.findViewById(R.id.desktopLayoutContainer).setVisibility(VISIBLE);
+        view.findViewById(R.id.error).setVisibility(GONE);
         ((EditText)view.findViewById(R.id.iconsXBox)).setText(String.valueOf(desktopLayout.getIconCountX()));
         ((EditText)view.findViewById(R.id.iconsYBox)).setText(String.valueOf(desktopLayout.getIconCountY()));
         ((EditText)view.findViewById(R.id.marginPxBox)).setText(String.valueOf(desktopLayout.getIconPadding()));
@@ -56,6 +71,5 @@ public class DesktopFragment extends Fragment {
         }
         ArrayAdapter<String> arr = new ArrayAdapter<>(view.getContext().getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, icons);
         ((ListView)view.findViewById(R.id.appsListView)).setAdapter(arr);
-        return view;
     }
 }

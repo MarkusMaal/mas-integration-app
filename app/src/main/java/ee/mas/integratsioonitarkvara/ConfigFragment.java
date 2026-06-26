@@ -1,8 +1,10 @@
 package ee.mas.integratsioonitarkvara;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -17,7 +19,7 @@ import ee.mas.integratsioonitarkvara.models.CommonConfig;
  * A simple {@link Fragment} subclass.
  */
 public class ConfigFragment extends Fragment {
-    private final CommonConfig config;
+    private CommonConfig config;
 
     public ConfigFragment() {
         this.config = null;
@@ -31,7 +33,19 @@ public class ConfigFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         var view = inflater.inflate(R.layout.fragment_config, container, false);
-        if (config == null) return view;
+        updateConfig(config, view);
+        return view;
+    }
+
+    public void updateConfig(CommonConfig config, View view) {
+        this.config = config;
+        if (config == null) {
+            view.findViewById(R.id.error).setVisibility(VISIBLE);
+            view.findViewById(R.id.configLayout).setVisibility(GONE);
+            return;
+        }
+        view.findViewById(R.id.error).setVisibility(GONE);
+        view.findViewById(R.id.configLayout).setVisibility(VISIBLE);
         // Inflate the layout for this fragment
         CheckBox logoCheck = view.findViewById(R.id.logoCheckbox);
         CheckBox scheduleCheck = view.findViewById(R.id.scheduleCheckbox);
@@ -41,6 +55,5 @@ public class ConfigFragment extends Fragment {
         scheduleCheck.setChecked(config.isAllowScheduledTasks());
         notesCheck.setChecked(config.isAutostartNotes());
         pollRate.setText(String.valueOf(config.getPollRate()));
-        return view;
     }
 }

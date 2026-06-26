@@ -1,8 +1,13 @@
 package ee.mas.integratsioonitarkvara;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.ComponentCaller;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -21,6 +26,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.Objects;
+import java.util.function.Consumer;
 
 import ee.mas.integratsioonitarkvara.models.CommonConfig;
 import ee.mas.integratsioonitarkvara.models.DesktopLayout;
@@ -43,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
     private static MarkuStationGame[] markuStationGames;
     private static DesktopLayout desktopLayout;
 
+    private boolean firstLoad = true;
+
+    private final ApiService apiService = new Retrofit.Builder()
+            .baseUrl("http://192.168.1.201:14415")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService.class);
+
     private enum Tabs {
         WELCOME,
         MARKUSTATION,
@@ -54,23 +70,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onNewIntent(@NonNull Intent intent, @NonNull ComponentCaller caller) {
-        Refresh();
+        refresh();
         super.onNewIntent(intent, caller);
     }
 
     @Override
     protected void onRestart() {
-        Refresh();
+        refresh();
         super.onRestart();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Refresh();
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this, SystemBarStyle.dark(ContextCompat.getColor(this, R.color.purple_700)));
         setContentView(R.layout.activity_main);
 
+        refresh();
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager2 viewPager = findViewById(R.id.pager);
         TabCollectionAdapter tabCollectionAdapter = new TabCollectionAdapter(getSupportFragmentManager(), getLifecycle());
@@ -97,6 +113,29 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }).attach();
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                var v = getSupportFragmentManager().findFragmentByTag("f" + position);
+                if (v instanceof AboutFragment) {
+                    refresh(Tabs.ABOUT);
+                    ((AboutFragment)v).updateEdition(edition, v.getView());
+                } else if (v instanceof ConfigFragment) {
+                    refresh(Tabs.CONFIG);
+                    ((ConfigFragment)v).updateConfig(config, v.getView());
+                } else if (v instanceof MarkuStationFragment) {
+                    refresh(Tabs.MARKUSTATION);
+                    ((MarkuStationFragment)v).updateMarkuStation(markuStationConfig, markuStationGames, v.getView());
+                } else if (v instanceof DesktopFragment) {
+                    refresh(Tabs.DESKTOP);
+                    ((DesktopFragment)v).updateDesktop(desktopLayout, v.getView());
+                }
+                super.onPageSelected(position);
+            }
+        });
+
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -137,78 +176,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void Refresh() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.201:14415")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public void refresh() {
+        refresh(Tabs.ABOUT);
+        refresh(Tabs.CONFIG);
+        refresh(Tabs.MARKUSTATION);
+        refresh(Tabs.DESKTOP);
+    }
 
-        ApiService apiService = retrofit.create(ApiService.class);
+    public void refresh(Tabs tab) {
+        findViewById(R.id.progressBar).setVisibility(VISIBLE);
+        switch (tab) {
+            case ABOUT:
+                enqueue(apiService.getEdition(), e -> edition = e, this);
+                break;
+            case MARKUSTATION:
+                enqueue(apiService.getMarkuStationConfig(), c -> markuStationConfig = c, this);
+                enqueue(apiService.getMarkuStationGames(), g -> markuStationGames = g, this);
+                break;
+            case CONFIG:
+                enqueue(apiService.getConfig(), c -> config = c, this);
+                break;
+            case DESKTOP:
+                enqueue(apiService.getDesktopLayout(), d -> desktopLayout = d, this);
+                break;
+        }
+        firstLoad = false;
+    }
 
-        apiService.getConfig().enqueue(new Callback<>() {
+    private <T> void enqueue(Call<T> call, Consumer<T> onSuccess, Context context) {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<CommonConfig> call, @NonNull Response<CommonConfig> response) {
-                if (!response.isSuccessful()) return;
-                config = response.body();
+            public void onResponse(@NonNull Call<T> call,
+                                   @NonNull Response<T> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    findViewById(R.id.progressBar).setVisibility(GONE);
+                    onSuccess.accept(response.body());
+                }
             }
 
             @Override
-            public void onFailure(@NonNull Call<CommonConfig> call, @NonNull Throwable t) {
-            }
-        });
-
-        apiService.getEdition().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Edition> call, @NonNull Response<Edition> response) {
-                if (!response.isSuccessful()) return;
-                edition = response.body();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Edition> call, @NonNull Throwable t) {}
-        });
-
-        apiService.getMarkuStationConfig().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<MarkuStationConfig> call, @NonNull Response<MarkuStationConfig> response) {
-                if (!response.isSuccessful()) return;
-                markuStationConfig = response.body();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MarkuStationConfig> call, @NonNull Throwable t) {
-
-            }
-        });
-
-        apiService.getMarkuStationGames().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<MarkuStationGame[]> call, @NonNull Response<MarkuStationGame[]> response) {
-                if (!response.isSuccessful()) return;
-                markuStationGames = response.body();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MarkuStationGame[]> call, @NonNull Throwable t) {
-
-            }
-        });
-
-        apiService.getDesktopLayout().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<DesktopLayout> call, @NonNull Response<DesktopLayout> response) {
-                if (!response.isSuccessful()) return;
-                desktopLayout = response.body();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<DesktopLayout> call, @NonNull Throwable t) {
-
+            public void onFailure(@NonNull Call<T> call,
+                                  @NonNull Throwable t) {
+                Log.println(Log.ERROR, "API request failed", Objects.requireNonNull(t.getMessage()));
+                if (!firstLoad) {
+                    findViewById(R.id.progressBar).setVisibility(GONE);
+                }
+                onSuccess.accept(null);
             }
         });
     }
 
-    public void Refresh(View view) {
-        Refresh();
+    public void refresh(View view) {
+        refresh();
     }
 }

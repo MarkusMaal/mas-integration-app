@@ -2,147 +2,162 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-<LinearLayout
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".DesktopFragment">
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ikoonid"
-        android:textSize="20sp" />
+    android:padding="15sp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context=".DesktopFragment">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/error"
+            android:name="ee.mas.integratsioonitarkvara.ErrorFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <LinearLayout
+            android:id="@+id/desktopLayoutContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView9"
-                android:layout_width="165dp"
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Ikoonide arv" />
+                android:text="Ikoonid"
+                android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/iconsXBox"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number" />
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/iconsYBox"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="165dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Ikoonide arv" />
+
+                    <EditText
+                        android:id="@+id/iconsXBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/iconsYBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="number" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Veeris (px)" />
+
+                    <EditText
+                        android:id="@+id/marginPxBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="number" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Suurus (suhteline)" />
+
+                    <EditText
+                        android:id="@+id/relativeSizeBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/lockCheckbox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:orientation="horizontal">
+                android:text="Lukusta ikoonid" />
 
             <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Veeris (px)" />
+                android:layout_marginTop="20sp"
+                android:text="Rakendused"
+                android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/marginPxBox"
-                android:layout_width="wrap_content"
+            <ListView
+                android:id="@+id/appsListView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+                android:layout_marginTop="10sp" />
 
             <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Suurus (suhteline)" />
+                android:layout_marginTop="10sp"
+                android:text="Varia"
+                android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/relativeSizeBox"
-                android:layout_width="wrap_content"
+            <CheckBox
+                android:id="@+id/desktopIconsCheckbox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number" />
+                android:text="Kuva töölauaikoonid" />
+
+            <CheckBox
+                android:id="@+id/markusStuffLogoCheckbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kuva Markuse asjad logo" />
+
+            <CheckBox
+                android:id="@+id/controlsCheckbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kuva juhtnupud" />
         </LinearLayout>
+
     </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/lockCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Lukusta ikoonid" />
-
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20sp"
-        android:text="Rakendused"
-        android:textSize="20sp" />
-
-    <ListView
-        android:id="@+id/appsListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:text="Varia"
-        android:textSize="20sp" />
-
-    <CheckBox
-        android:id="@+id/desktopIconsCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kuva töölauaikoonid" />
-
-    <CheckBox
-        android:id="@+id/markusStuffLogoCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kuva Markuse asjad logo" />
-
-    <CheckBox
-        android:id="@+id/controlsCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kuva juhtnupud" />
-
-</LinearLayout>
 </ScrollView>

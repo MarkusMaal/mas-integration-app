@@ -1,52 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/config_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="left"
     android:orientation="vertical"
-    android:id="@+id/config_fragment"
+    android:padding="15sp"
     tools:context=".ConfigFragment">
 
-    <TextView
-        android:id="@+id/textView3"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/error"
+        android:name="ee.mas.integratsioonitarkvara.ErrorFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="1sp"
-        android:layout_marginTop="1sp"
-        android:text="Konfiguratsioon"
-        android:textSize="20sp" />
+        android:layout_height="match_parent" />
 
-    <CheckBox
-        android:id="@+id/logoCheckbox"
+    <LinearLayout
+        android:id="@+id/configLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kuva Markuse asjade logo käivitumisel" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <CheckBox
-        android:id="@+id/scheduleCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Luba ajastatud sündmused" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1sp"
+            android:layout_marginTop="1sp"
+            android:text="Konfiguratsioon"
+            android:textSize="20sp" />
 
-    <CheckBox
-        android:id="@+id/desktopNotesCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Käivita töölauamärkmed käivitumisel" />
+        <CheckBox
+            android:id="@+id/logoCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kuva Markuse asjade logo käivitumisel" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pollimise sagedus: " />
+        <CheckBox
+            android:id="@+id/scheduleCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Luba ajastatud sündmused" />
 
-    <EditText
-        android:id="@+id/pollRateTextbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8sp"
-        android:ems="10"
-        android:inputType="number" />
+        <CheckBox
+            android:id="@+id/desktopNotesCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Käivita töölauamärkmed käivitumisel" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pollimise sagedus: " />
+
+        <EditText
+            android:id="@+id/pollRateTextbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:ems="10"
+            android:inputType="number" />
+    </LinearLayout>
 
 </LinearLayout>

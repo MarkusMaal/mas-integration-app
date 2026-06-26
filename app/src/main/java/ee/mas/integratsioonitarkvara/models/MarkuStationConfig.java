@@ -3,7 +3,7 @@ package ee.mas.integratsioonitarkvara.models;
 public class MarkuStationConfig {
     private boolean creepypastaIntro;
     private boolean specialIntro;
-    private boolean playIntro;
+    private boolean playIntros;
     private boolean legacyIntro;
     private int monitorMode;
 
@@ -24,11 +24,11 @@ public class MarkuStationConfig {
     }
 
     public boolean isPlayIntro() {
-        return playIntro;
+        return playIntros;
     }
 
     public void setPlayIntro(boolean playIntro) {
-        this.playIntro = playIntro;
+        this.playIntros = playIntro;
     }
 
     public boolean isLegacyIntro() {

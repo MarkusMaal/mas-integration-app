@@ -1,5 +1,8 @@
 package ee.mas.integratsioonitarkvara;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,8 +20,8 @@ import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
  * A simple {@link Fragment} subclass.
  */
 public class MarkuStationFragment extends Fragment {
-    private final MarkuStationConfig config;
-    private final MarkuStationGame[] games;
+    private MarkuStationConfig config;
+    private MarkuStationGame[] games;
 
     public MarkuStationFragment() {
         this.config = null;
@@ -33,12 +36,24 @@ public class MarkuStationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_markustation, container, false);
-        if (config == null) return view;
+        updateMarkuStation(config, games, view);
+        return view;
+    }
+
+    public void updateMarkuStation(MarkuStationConfig config, MarkuStationGame[] games, View view) {
+        this.config = config;
+        this.games = games;
+        if (config == null) {
+            view.findViewById(R.id.markuStationContainer).setVisibility(GONE);
+            view.findViewById(R.id.error).setVisibility(VISIBLE);
+            return;
+        }
+        view.findViewById(R.id.markuStationContainer).setVisibility(VISIBLE);
+        view.findViewById(R.id.error).setVisibility(GONE);
         ((CheckBox)view.findViewById(R.id.introCheckbox)).setChecked(config.isPlayIntro());
         ((CheckBox)view.findViewById(R.id.creepypastaCheckbox)).setChecked(config.isCreepypastaIntro());
         ((CheckBox)view.findViewById(R.id.legacyCheckbox)).setChecked(config.isLegacyIntro());
         ((CheckBox)view.findViewById(R.id.specialCheckbox)).setChecked(config.isSpecialIntro());
         ((Spinner)view.findViewById(R.id.monitorModeSpinner)).setSelection(config.getMonitorMode());
-        return view;
     }
 }
