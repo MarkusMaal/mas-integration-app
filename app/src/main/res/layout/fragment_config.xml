@@ -36,18 +36,21 @@
             android:id="@+id/logoCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="logoCheckboxClick"
             android:text="Kuva Markuse asjade logo käivitumisel" />
 
         <CheckBox
             android:id="@+id/scheduleCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="logoCheckboxClick"
             android:text="Luba ajastatud sündmused" />
 
         <CheckBox
             android:id="@+id/desktopNotesCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="logoCheckboxClick"
             android:text="Käivita töölauamärkmed käivitumisel" />
 
         <TextView

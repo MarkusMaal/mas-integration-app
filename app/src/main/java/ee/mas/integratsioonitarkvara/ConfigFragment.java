@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,26 +21,40 @@ import ee.mas.integratsioonitarkvara.models.CommonConfig;
  * A simple {@link Fragment} subclass.
  */
 public class ConfigFragment extends Fragment {
-    private CommonConfig config;
 
     public ConfigFragment() {
-        this.config = null;
-    }
 
-    public ConfigFragment(CommonConfig config) {
-        this.config = config;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         var view = inflater.inflate(R.layout.fragment_config, container, false);
-        updateConfig(config, view);
+        updateConfig(MainActivity.config, view);
+        ((EditText)view.findViewById(R.id.pollRateTextbox)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) { }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try
+                {
+                    var val = Integer.parseInt(s.toString());
+                    if (MainActivity.config == null) return;
+                    MainActivity.config.setPollRate(val);
+                } catch (NumberFormatException ignored) {
+
+                }
+                MainActivity.saveConfig(MainActivity.Tabs.CONFIG);
+            }
+        });
         return view;
     }
 
     public void updateConfig(CommonConfig config, View view) {
-        this.config = config;
         if (config == null) {
             view.findViewById(R.id.error).setVisibility(VISIBLE);
             view.findViewById(R.id.configLayout).setVisibility(GONE);

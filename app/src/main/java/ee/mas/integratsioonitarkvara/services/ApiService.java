@@ -7,7 +7,9 @@ import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
 import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
 import ee.mas.integratsioonitarkvara.models.Scheme;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface ApiService {
     @GET("edition")
@@ -27,4 +29,10 @@ public interface ApiService {
 
     @GET("desktop")
     Call<DesktopLayout> getDesktopLayout();
+
+    @POST("config")
+    Call<CommonConfig> saveCommonConfig(@Body CommonConfig newConfig);
+
+    @POST("markustation/config")
+    Call<MarkuStationConfig> saveMarkuStationConfig(@Body MarkuStationConfig newConfig);
 }

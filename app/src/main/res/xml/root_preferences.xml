@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/auth">
+
+        <EditTextPreference
+            app:key="ip"
+            app:title="@string/ip_address"
+            app:defaultValue="192.168.1.201"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="port"
+            app:title="@string/port"
+            app:defaultValue="14415"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="code"
+            app:title="@string/authcode"
+            app:defaultValue=""
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

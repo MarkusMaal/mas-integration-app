@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
@@ -20,29 +21,31 @@ import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
  * A simple {@link Fragment} subclass.
  */
 public class MarkuStationFragment extends Fragment {
-    private MarkuStationConfig config;
-    private MarkuStationGame[] games;
 
     public MarkuStationFragment() {
-        this.config = null;
-        this.games = null;
+
     }
-    public MarkuStationFragment(MarkuStationConfig config, MarkuStationGame[] games) {
-        this.config = config;
-        this.games = games;
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_markustation, container, false);
-        updateMarkuStation(config, games, view);
+        updateMarkuStation(MainActivity.markuStationConfig, MainActivity.markuStationGames, view);
+        ((Spinner)view.findViewById(R.id.monitorModeSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.markuStationConfig.setMonitorMode(position);
+                MainActivity.saveConfig(MainActivity.Tabs.MARKUSTATION);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
         return view;
     }
 
     public void updateMarkuStation(MarkuStationConfig config, MarkuStationGame[] games, View view) {
-        this.config = config;
-        this.games = games;
         if (config == null) {
             view.findViewById(R.id.markuStationContainer).setVisibility(GONE);
             view.findViewById(R.id.error).setVisibility(VISIBLE);

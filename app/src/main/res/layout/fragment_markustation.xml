@@ -40,24 +40,28 @@
             android:id="@+id/introCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="markuStationCheckboxClick"
             android:text="Luba introd" />
 
         <CheckBox
             android:id="@+id/creepypastaCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="markuStationCheckboxClick"
             android:text="Creepypasta intro" />
 
         <CheckBox
             android:id="@+id/legacyCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="markuStationCheckboxClick"
             android:text="Pärandintro" />
 
         <CheckBox
             android:id="@+id/specialCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="markuStationCheckboxClick"
             android:text="Special intro" />
     </LinearLayout>
 
