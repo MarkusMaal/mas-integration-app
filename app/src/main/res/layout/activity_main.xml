@@ -15,14 +15,15 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/purple_500"
             android:orientation="horizontal"
-            android:paddingTop="20sp">
+            android:paddingTop="25sp">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/topLogo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:foregroundGravity="right"
@@ -72,16 +73,33 @@
         android:layout_gravity="center"
         android:visibility="visible" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:isScrollContainer="true"
-        android:scrollIndicators="end"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarStyle="insideOverlay"
-        android:visibility="visible">
+        android:layout_height="match_parent">
 
-    </androidx.viewpager2.widget.ViewPager2>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="1.0"
+            android:isScrollContainer="true"
+            android:scrollIndicators="end"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarStyle="insideOverlay"
+            android:translationZ="10dp"
+            android:visibility="visible">
+
+        </androidx.viewpager2.widget.ViewPager2>
+
+        <ImageView
+            android:id="@+id/backgroundImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:scaleType="centerCrop"
+            android:translationZ="5dp"
+            app:srcCompat="@drawable/ic_launcher_background" />
+
+    </FrameLayout>
 
 </LinearLayout>

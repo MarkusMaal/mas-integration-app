@@ -81,4 +81,15 @@
     <string name="preference_category_about">About</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="background_images">Background images</string>
+    <string name="desktop_background">Desktop background</string>
+    <string name="login_screen">Login screen</string>
+    <string name="miniversion">Miniversion</string>
+    <string name="device_background">Device background</string>
+    <string name="device_lock_screen">Device lock screen</string>
+    <string name="downloading_background">Downloading background</string>
+    <string name="success">Success!</string>
+    <string name="games">Games</string>
+    <string name="defaultIp" translatable="false">192.168.1.201</string>
+    <string name="defaultPort" translatable="false">14415</string>
 </resources>

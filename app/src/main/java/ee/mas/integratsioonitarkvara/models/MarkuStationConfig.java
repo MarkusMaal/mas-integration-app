@@ -46,11 +46,4 @@ public class MarkuStationConfig {
     public void setMonitorMode(int monitorMode) {
         this.monitorMode = monitorMode;
     }
-
-    public enum MonitorModes {
-        INTERNAL,
-        EXTERNAL,
-        EXTEND,
-        CLONE
-    }
 }

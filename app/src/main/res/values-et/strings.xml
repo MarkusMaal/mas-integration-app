@@ -78,4 +78,13 @@
     <string name="preference_category_about">Rakenduse teave</string>
     <string name="yes">Jah</string>
     <string name="no">Ei</string>
+    <string name="background_images">Taustapildid</string>
+    <string name="desktop_background">Töölaua taust</string>
+    <string name="login_screen">Logimisekraan</string>
+    <string name="miniversion">Miniversioon</string>
+    <string name="device_background">Seadme taustapilt</string>
+    <string name="device_lock_screen">Seadme lukustusekraan</string>
+    <string name="downloading_background">Tausta alla laadimine</string>
+    <string name="success">Õnnestus!</string>
+    <string name="games">Mängud</string>
 </resources>

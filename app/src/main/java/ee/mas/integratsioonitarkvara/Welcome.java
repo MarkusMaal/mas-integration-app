@@ -5,7 +5,9 @@ import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -35,6 +37,7 @@ public class Welcome extends Fragment {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_welcome, container, false);
         var vw = ((WebView)view.findViewById(R.id.webView));
+        vw.setBackgroundColor(Color.TRANSPARENT);
         vw.loadUrl("https://markuseasjad.blogspot.com");
         vw.setWebViewClient(new WebViewClient() {
             @Override
@@ -57,11 +60,12 @@ public class Welcome extends Fragment {
                     rootActivity.findViewById(R.id.error).setVisibility(GONE);
                 }
                 vw.getSettings().setJavaScriptEnabled(true);
-                if (checkIsTablet() && vw.getUrl().equals("https://markuseasjad.blogspot.com/")) {
+                if (checkIsTablet(getContext()) && vw.getUrl().equals("https://markuseasjad.blogspot.com/")) {
                     view.loadUrl("javascript:(function() { document.querySelector(\".blogger\").style.paddingRight = \"20vw\"; document.querySelector(\"body\").style.width = \"120vw\"; document.querySelector(\".copyright\").style.paddingRight = \"20vw\"; document.querySelector(\"body\").style.overflowX = \"hidden\";  })()");
                 }
                 view.loadUrl("javascript:(function() { document.querySelector(\".blog-name\").style.display = \"none\"; document.querySelector(\".search\").style.display = \"none\"; document.querySelector(\".top-nav\").style.display = \"none\"; document.querySelector(\".sidebar\").style.display = \"none\"; })()");
                 vw.getSettings().setJavaScriptEnabled(false);
+                vw.setBackgroundColor(Color.TRANSPARENT);
             }
 
             @Override
@@ -79,9 +83,9 @@ public class Welcome extends Fragment {
         });
         return view;
     }
-    private boolean checkIsTablet() {
+    public static boolean checkIsTablet(Context ctx) {
         boolean isTablet = false;
-        var activity = ((Activity)   this.getContext());
+        var activity = ((Activity)   ctx) ;
         if (activity == null) return false;
         var wm = activity.getWindowManager();
         if (wm == null) return false;

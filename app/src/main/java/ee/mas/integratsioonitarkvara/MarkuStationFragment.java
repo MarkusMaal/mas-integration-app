@@ -3,8 +3,11 @@ package ee.mas.integratsioonitarkvara;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static ee.mas.integratsioonitarkvara.DesktopFragment.getListViewSize;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,7 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
 import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
@@ -59,5 +67,21 @@ public class MarkuStationFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.legacyCheckbox)).setChecked(config.isLegacyIntro());
         ((CheckBox)view.findViewById(R.id.specialCheckbox)).setChecked(config.isSpecialIntro());
         ((Spinner)view.findViewById(R.id.monitorModeSpinner)).setSelection(config.getMonitorMode());
+        var gamesView = ((ListView)view.findViewById(R.id.gamesListView));
+        SimpleAdapter adapter = getSimpleAdapter(view);
+        gamesView.setAdapter(adapter);
+        getListViewSize(gamesView);
+    }
+
+    @NonNull
+    private static SimpleAdapter getSimpleAdapter(View view) {
+        var gamesList = new ArrayList<HashMap<String, String>>();
+        for (var g : MainActivity.markuStationGames) {
+            HashMap<String,String> game = new HashMap<>();
+            game.put("Title", g.getName());
+            game.put("Executable", g.getExecutable());
+            gamesList.add(game);
+        }
+        return new SimpleAdapter(view.getContext().getApplicationContext(), gamesList, android.R.layout.simple_list_item_2, new String[] {"Title", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
     }
 }

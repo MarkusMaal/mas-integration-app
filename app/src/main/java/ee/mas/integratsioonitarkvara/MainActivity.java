@@ -4,16 +4,25 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.ComponentCaller;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
@@ -28,13 +37,18 @@ import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -104,8 +118,9 @@ public class MainActivity extends AppCompatActivity {
             Request request = chain.request().newBuilder().addHeader("Auth", getSettingsAuth()).build();
             return chain.proceed(request);
         });
+        var endPoint = getSettingsUrl();
         apiService = new Retrofit.Builder()
-                .baseUrl(getSettingsUrl())
+                .baseUrl(endPoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build()
@@ -173,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
+        loadBackground(endPoint);
     }
 
 
@@ -226,6 +242,28 @@ public class MainActivity extends AppCompatActivity {
             case CONFIG:
                 enqueue(apiService.getConfig(), c -> config = c, this);
                 enqueue(apiService.getScheme(), s -> scheme = s, this);
+                var imv = (ImageView) findViewById(R.id.desktopBackground);
+                var iml = (ImageView) findViewById(R.id.loginBackground);
+                var imu = (ImageView) findViewById(R.id.uncommonBackground);
+                var imt = (ImageView) findViewById(R.id.deviceBackground);
+                var imtl = (ImageView) findViewById(R.id.deviceLockScreen);
+                if (imv == null) break;
+                var endpoint = getSettingsUrl();
+                imv.setOnClickListener(v -> saveToGallery(endpoint, "bg_desktop.png"));
+                iml.setOnClickListener(v -> saveToGallery(endpoint, "bg_login.png"));
+                imu.setOnClickListener(v -> saveToGallery(endpoint, "bg_uncommon.png"));
+                imt.setOnClickListener(v -> saveToGallery(endpoint, Welcome.checkIsTablet(this) ? "bg_tablet.png" : "bg_mobile.png"));
+                imtl.setOnClickListener(v -> saveToGallery(endpoint, Welcome.checkIsTablet(this) ? "bg_tablet_lock.png" : "bg_mobile_lock.png"));
+                Glide.with(this).load(endpoint + "/mas/bg_desktop.png").into(imv);
+                Glide.with(this).load(endpoint + "/mas/bg_login.png").into(iml);
+                Glide.with(this).load(endpoint + "/mas/bg_uncommon.png").into(imu);
+                if (Welcome.checkIsTablet(this)) {
+                    Glide.with(this).load(endpoint + "/mas/bg_tablet.png").into(imt);
+                    Glide.with(this).load(endpoint + "/mas/bg_tablet_lock.png").into(imtl);
+                } else {
+                    Glide.with(this).load(endpoint + "/mas/bg_mobile.png").into(imt);
+                    Glide.with(this).load(endpoint + "/mas/bg_mobile_lock.png").into(imtl);
+                }
                 break;
             case DESKTOP:
                 enqueue(apiService.getDesktopLayout(), d -> desktopLayout = d, this);
@@ -233,6 +271,52 @@ public class MainActivity extends AppCompatActivity {
         }
         firstLoad = false;
     }
+
+    private void loadBackground(String endpoint) {
+        var fullUrl = endpoint + "/mas/bg_common.png";
+        var pg = (ImageView) findViewById(R.id.backgroundImage);
+        Glide.with(this).load(fullUrl).into(pg);
+    }
+
+    public void saveToGallery(String endpoint, String url) {
+        Toast t = new Toast(this);
+        t.setText(getString(R.string.downloading_background) + " (" + url + ")");
+        t.show();
+        var thr = new Thread(() -> {
+            try {
+                var fullUrl = endpoint + "/mas/" + url;
+                InputStream inputStream = new URL(fullUrl).openStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DISPLAY_NAME, url);
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+                values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+                Uri uri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        values);
+
+                if (uri != null) {
+                    try (OutputStream out = getContentResolver().openOutputStream(uri)) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                runOnUiThread(() -> {
+                    var t2 = new Toast(this);
+                    t2.setText(R.string.success);
+                    t2.show();
+                });
+            } catch (IOException ignore){
+
+            }
+        });
+        thr.start();
+    }
+
+
 
     private <T> void enqueue(Call<T> call, Consumer<T> onSuccess, Context context) {
         call.enqueue(new Callback<>() {
@@ -265,8 +349,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String getSettingsUrl() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        var ip = sp.getString("ip", "192.168.1.201");
-        var port = sp.getString("port", "14415");
+        var ip = sp.getString("ip", getString(R.string.defaultIp));
+        var port = sp.getString("port", getString(R.string.defaultPort));
         return "http://" + ip + ":" + port;
     }
 
@@ -341,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(() -> {
             try {
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-                var ip = sp.getString("ip", "192.168.1.201");
+                var ip = sp.getString("ip", getString(R.string.defaultIp));
                 var wp = sp.getString("wol-port", "9");
                 var mac = sp.getString("wol-mac", "00:00:00:00:00:00").toUpperCase();
                 int port = Integer.parseInt(wp);

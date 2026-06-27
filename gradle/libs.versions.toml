@@ -4,6 +4,7 @@ colorpicker = "1.1.6"
 colorpickerVersion = "1.2.0"
 flexbox = "3.0.0"
 githubColorPickerView = "1.4.0"
+glide = "5.0.7"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
@@ -23,6 +24,8 @@ duanhong169-colorpicker = { module = "com.github.duanhong169:colorpicker" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 github-color-picker-view = { module = "com.github.danielnilsson9:color-picker-view", version.ref = "githubColorPickerView" }
 github-colorpicker = { module = "com.github.mrudultora:Colorpicker", version.ref = "colorpickerVersion" }
+github-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide = { module = "com.github.bumptech.glide:glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

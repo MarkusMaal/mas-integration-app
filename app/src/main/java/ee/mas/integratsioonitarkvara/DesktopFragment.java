@@ -5,19 +5,22 @@ import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ee.mas.integratsioonitarkvara.models.DesktopLayout;
 
@@ -68,14 +71,24 @@ public class DesktopFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.markusStuffLogoCheckbox)).setChecked(desktopLayout.isShowLogo());
         ((CheckBox)view.findViewById(R.id.controlsCheckbox)).setChecked(desktopLayout.isShowActions());
         var appsView = ((ListView)view.findViewById(R.id.appsListView));
-        var icons = new ArrayList<String>();
-        for (var i : desktopLayout.getChildren()) {
-            icons.add(i.getIcon() + ": " + i.getExecutable());
-        }
-        ArrayAdapter<String> arr = new ArrayAdapter<>(view.getContext().getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, icons);
-        appsView.setAdapter(arr);
+        SimpleAdapter sa = getSimpleAdapter(desktopLayout, view);
+        appsView.setAdapter(sa);
         getListViewSize(appsView);
     }
+
+    @NonNull
+    private static SimpleAdapter getSimpleAdapter(DesktopLayout desktopLayout, View view) {
+        var icons = new ArrayList<HashMap<String, String>>();
+        for (var i : desktopLayout.getChildren()) {
+            HashMap<String, String> icon = new HashMap<>();
+            icon.put("Icon", i.getIcon());
+            icon.put("Executable", i.getExecutable());
+            icons.add(icon);
+        }
+        SimpleAdapter sa = new SimpleAdapter(view.getContext().getApplicationContext(), icons, android.R.layout.simple_expandable_list_item_2, new String[] {"Icon", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
+        return sa;
+    }
+
 
     public static void getListViewSize(ListView myListView) {
         ListAdapter myListAdapter=myListView.getAdapter();
@@ -89,10 +102,9 @@ public class DesktopFragment extends Fragment {
         for (int size=0; size < myListAdapter.getCount(); size++) {
             View listItem=myListAdapter.getView(size, null, myListView);
             listItem.measure(0, 0);
-            lastHeight = listItem.getMeasuredHeight() * 2;
+            lastHeight = listItem.getMeasuredHeight();
             totalHeight += lastHeight;
         }
-        totalHeight += lastHeight * 2;
         //setting listview item in adapter
         ViewGroup.LayoutParams params=myListView.getLayoutParams();
         params.height=(totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1)));
