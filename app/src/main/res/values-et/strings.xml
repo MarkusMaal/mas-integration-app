@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Integratsioon</string>
+    <string name="app_name_long">Markuse asjad</string>
+
+    <string name="title_activity_settings">Seaded</string>
+
+    <string name="ip_address">Arvuti IP aadress</string>
+    <string name="auth">Autentimine</string>
+    <string name="port">Port</string>
+    <string name="authcode">Autentimiskood</string>
+    <string name="mac_address">MAC aadress</string>
+    <string name="version">Versioon</string>
+    <string name="app_name_setting">Nimi</string>
+
+    <!-- UI -->
+    <string name="packetFail">Arvuti äratamine nurjus</string>
+    <string name="packetSent">Arvuti äratamine…</string>
+    <string name="teave_arvuti_kohta">Teave arvuti kohta</string>
+    <string name="arvuti_ratamine">Arvuti äratamine</string>
+    <string name="laadi_uuesti">Laadi uuesti</string>
+    <string name="seaded">Seaded</string>
+    <string name="rakendus">Rakendus</string>
+    <string name="konfiguratsioon">Konfiguratsioon</string>
+    <string name="kuva_markuse_asjade_logo_k_ivitumisel">Kuva Markuse asjade logo käivitumisel</string>
+    <string name="luba_ajastatud_s_ndmused">Luba ajastatud sündmused</string>
+    <string name="k_ivita_t_lauam_rkmed_k_ivitumisel">Käivita töölauamärkmed käivitumisel</string>
+    <string name="pollimise_sagedus">Pollimise sagedus:</string>
+    <string name="v_rvid">Värvid</string>
+    <string name="taust">Taust</string>
+    <string name="esiplaan">Esiplaan</string>
+    <string name="ikoonid">Ikoonid</string>
+    <string name="ikoonide_arv">Ikoonide arv</string>
+    <string name="veeris_px">Veeris (px)</string>
+    <string name="suurus_suhteline">Suurus (suhteline)</string>
+    <string name="lukusta_ikoonid">Lukusta ikoonid</string>
+    <string name="rakendused">Rakendused</string>
+    <string name="varia">Varia</string>
+    <string name="kuva_t_lauaikoonid">Kuva töölauaikoonid</string>
+    <string name="kuva_markuse_asjad_logo">Kuva Markuse asjad logo</string>
+    <string name="kuva_juhtnupud">Kuva juhtnupud</string>
+    <string name="monitori_re_iim">Monitori režiim</string>
+    <string name="luba_introd">Luba introd</string>
+    <string name="creepypasta_intro">Creepypasta intro</string>
+    <string name="p_randintro">Pärandintro</string>
+    <string name="special_intro">Special intro</string>
+    <string name="vali_taustav_rv">Vali taustavärv</string>
+    <string name="vali_esiplaani_v_rv">Vali esiplaani värv</string>
+    <string name="uudised">Uudised</string>
+    <string name="t_laud">Töölaud</string>
+    <string name="teave">Teave</string>
+    <string name="v_ljaanne">"Väljaanne: "</string>
+    <string name="versioon">"Versioon: "</string>
+    <string name="nimi">"Nimi: "</string>
+    <string name="j_rk">"Järk: "</string>
+    <string name="testitud">"Testitud: "</string>
+    <string name="kasutajanimi">"Kasutajanimi: "</string>
+    <string name="keel">"Keel: "</string>
+    <string name="tuuma_versioon">"Tuuma versioon: "</string>
+    <string name="funktsioonid">"Funktsioonid: "</string>
+    <string name="integratsioonitarkvara">Integratsioonitarkvara</string>
+    <string name="grupipoliitika">Grupipoliitika</string>
+    <string name="livetuner_optimeerimised">LiveTuner optimeerimised</string>
+    <string name="klassikaline_start_men">Klassikaline start menüü</string>
+    <string name="kaugjuhtimine">Kaugjuhtimine</string>
+    <string name="interaktiivne_t_laud">Interaktiivne töölaud</string>
+    <string name="standardfunktsioonid">Standardfunktsioonid</string>
+    <string name="markuse_asjade_tugi">Markuse asjade tugi</string>
+    <string name="ebaturvaline_pin_kood">"Ebaturvaline PIN kood: "</string>
+    <string name="verifile_r_si">"Verifile räsi: "</string>
+    <string name="monitor_internal">Ainult peamine ekraan</string>
+    <string name="monitor_external">Ainult väline ekraan</string>
+    <string name="monitor_duplicate">Klooni</string>
+    <string name="monitor_extend">Laienda</string>
+    <string name="andmete_laadimine_eba_nnestus">Andmete laadimine ebaõnnestus</string>
+    <string name="kontrolli_v_rgu_hendust_ja_veendu_et_api_server_oleks_aktiivne">Kontrolli võrguühendust ja veendu, et API server oleks aktiivne</string>
+    <string name="preference_category_wol">Äratus LANi kaudu</string>
+    <string name="preference_category_about">Rakenduse teave</string>
+    <string name="yes">Jah</string>
+    <string name="no">Ei</string>
+</resources>

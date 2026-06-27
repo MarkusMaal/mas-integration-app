@@ -22,7 +22,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Äratus LANi kaudu">
+    <PreferenceCategory app:title="@string/preference_category_wol">
         <EditTextPreference
             app:key="wol-mac"
             app:title="@string/mac_address"
@@ -34,7 +34,7 @@
             app:defaultValue="9"
             app:useSimpleSummaryProvider="true"/>
     </PreferenceCategory>
-    <PreferenceCategory app:title="Rakenduse teave">
+    <PreferenceCategory app:title="@string/preference_category_about">
         <EditTextPreference
             app:key="app-package"
             app:title="@string/app_name_setting"

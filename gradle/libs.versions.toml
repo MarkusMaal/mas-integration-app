@@ -1,6 +1,9 @@
 [versions]
 agp = "9.2.1"
+colorpicker = "1.1.6"
+colorpickerVersion = "1.2.0"
 flexbox = "3.0.0"
+githubColorPickerView = "1.4.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
@@ -11,10 +14,15 @@ constraintlayout = "2.1.4"
 retrofit = "3.0.0"
 fragment = "1.8.9"
 preference = "1.2.0"
+recyclerview = "1.4.0"
 
 [libraries]
+colorpicker = { module = "com.github.duanhong169:colorpicker", version.ref = "colorpicker" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+duanhong169-colorpicker = { module = "com.github.duanhong169:colorpicker" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
+github-color-picker-view = { module = "com.github.danielnilsson9:color-picker-view", version.ref = "githubColorPickerView" }
+github-colorpicker = { module = "com.github.mrudultora:Colorpicker", version.ref = "colorpickerVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -22,9 +30,12 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+mrudultora-colorpicker = { module = "com.github.mrudultora:Colorpicker" }
+quadflask-colorpicker = { module = "com.github.QuadFlask:colorpicker" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

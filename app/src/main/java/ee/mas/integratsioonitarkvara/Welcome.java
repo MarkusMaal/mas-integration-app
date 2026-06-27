@@ -54,6 +54,7 @@ public class Welcome extends Fragment {
                 var rootActivity = ((Activity)first.getContext());
                 if (rootActivity instanceof MainActivity) {
                     rootActivity.findViewById(R.id.progressBar).setVisibility(GONE);
+                    rootActivity.findViewById(R.id.error).setVisibility(GONE);
                 }
                 vw.getSettings().setJavaScriptEnabled(true);
                 if (checkIsTablet() && vw.getUrl().equals("https://markuseasjad.blogspot.com/")) {

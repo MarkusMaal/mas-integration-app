@@ -7,12 +7,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -65,11 +67,37 @@ public class DesktopFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.desktopIconsCheckbox)).setChecked(desktopLayout.isShowIcons());
         ((CheckBox)view.findViewById(R.id.markusStuffLogoCheckbox)).setChecked(desktopLayout.isShowLogo());
         ((CheckBox)view.findViewById(R.id.controlsCheckbox)).setChecked(desktopLayout.isShowActions());
+        var appsView = ((ListView)view.findViewById(R.id.appsListView));
         var icons = new ArrayList<String>();
         for (var i : desktopLayout.getChildren()) {
             icons.add(i.getIcon() + ": " + i.getExecutable());
         }
         ArrayAdapter<String> arr = new ArrayAdapter<>(view.getContext().getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, icons);
-        ((ListView)view.findViewById(R.id.appsListView)).setAdapter(arr);
+        appsView.setAdapter(arr);
+        getListViewSize(appsView);
+    }
+
+    public static void getListViewSize(ListView myListView) {
+        ListAdapter myListAdapter=myListView.getAdapter();
+        if (myListAdapter==null) {
+            //do nothing return null
+            return;
+        }
+        //set listAdapter in loop for getting final size
+        int totalHeight=0;
+        var lastHeight = 0;
+        for (int size=0; size < myListAdapter.getCount(); size++) {
+            View listItem=myListAdapter.getView(size, null, myListView);
+            listItem.measure(0, 0);
+            lastHeight = listItem.getMeasuredHeight() * 2;
+            totalHeight += lastHeight;
+        }
+        totalHeight += lastHeight * 2;
+        //setting listview item in adapter
+        ViewGroup.LayoutParams params=myListView.getLayoutParams();
+        params.height=(totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1)));
+        myListView.setLayoutParams(params);
+        // print height of adapter on log
+        Log.i("height of listItem:", String.valueOf(totalHeight));
     }
 }

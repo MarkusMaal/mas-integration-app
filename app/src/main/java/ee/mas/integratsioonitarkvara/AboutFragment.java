@@ -46,57 +46,57 @@ public class AboutFragment extends Fragment {
         view.findViewById(R.id.error).setVisibility(GONE);
         TextView tv = view.findViewById(R.id.textView);
         StringBuilder sb = new StringBuilder();
-        sb.append("Väljaanne: ").append(edition.getEditionName()).append("\n");
-        sb.append("Versioon: ").append(edition.getVersion()).append("\n");
-        sb.append("Nimi: ").append(edition.getName()).append("\n");
-        sb.append("Järk: ").append(edition.getBuildNo()).append("\n");
-        sb.append("Testitud: ").append(edition.isTested() ? "Jah" : "Ei").append("\n");
-        sb.append("Kasutajanimi: ").append(edition.getUsername()).append("\n");
-        sb.append("Keel: ").append(edition.getLanguage()).append("\n");
-        sb.append("Tuuma versioon: ").append(edition.getWinVer()).append("\n");
-        sb.append("Funktsioonid: ").append('\n');
+        sb.append(getString(R.string.v_ljaanne)).append(edition.getEditionName()).append("\n");
+        sb.append(getString(R.string.versioon)).append(edition.getVersion()).append("\n");
+        sb.append(getString(R.string.nimi)).append(edition.getName()).append("\n");
+        sb.append(getString(R.string.j_rk)).append(edition.getBuildNo()).append("\n");
+        sb.append(getString(R.string.testitud)).append(edition.isTested() ? getString(R.string.yes) : getString(R.string.no)).append("\n");
+        sb.append(getString(R.string.kasutajanimi)).append(edition.getUsername()).append("\n");
+        sb.append(getString(R.string.keel)).append(edition.getLanguage()).append("\n");
+        sb.append(getString(R.string.tuuma_versioon)).append(edition.getWinVer()).append("\n");
+        sb.append(getString(R.string.funktsioonid)).append('\n');
         for (var f : edition.getFeatures()) {
             switch (f) {
                 case "IP":
-                    sb.append(" - Integratsioonitarkvara\n");
+                    sb.append(" - " + getString(R.string.integratsioonitarkvara) + "\n");
                     break;
                 case "WX":
-                    sb.append(" - Windows 10+\n");
+                    sb.append(" - " + getString(R.string.windows_10) + "\n");
                     break;
                 case "RM":
-                    sb.append(" - Rainmeter\n");
+                    sb.append(" - " + getString(R.string.rainmeter) + "\n");
                     break;
                 case "GP":
-                    sb.append(" - Grupipoliitika\n");
+                    sb.append(" - " + getString(R.string.grupipoliitika) + "\n");
                     break;
                 case "LT":
-                    sb.append(" - LiveTuner optimeerimised\n");
+                    sb.append(" - " + getString(R.string.livetuner_optimeerimised) + "\n");
                     break;
                 case "DX":
-                    sb.append(" - DesktopX\n");
+                    sb.append(" - " + getString(R.string.desktopx) + "\n");
                     break;
                 case "CS":
-                    sb.append(" - Klassikaline start menüü\n");
+                    sb.append(" - " + getString(R.string.klassikaline_start_men) + "\n");
                     break;
                 case "RD":
-                    sb.append(" - Kaugjuhtimine\n");
+                    sb.append(" - " + getString(R.string.kaugjuhtimine) + "\n");
                     break;
                 case "IT":
-                    sb.append(" - Interaktiivne töölaud\n");
+                    sb.append(" - " + getString(R.string.interaktiivne_t_laud) + "\n");
                     break;
                 case "TS":
-                    sb.append(" - Standardfunktsioonid\n");
+                    sb.append(" - " + getString(R.string.standardfunktsioonid) + "\n");
                     break;
                 case "MM":
-                    sb.append(" - Markuse asjade tugi\n");
+                    sb.append(" - " + getString(R.string.markuse_asjade_tugi) + "\n");
                     break;
                 default:
                     sb.append(" - ??? \n");
                     break;
             }
         }
-        sb.append("Ebaturvaline PIN kood: ").append(edition.getPin()).append("\n");
-        sb.append("Verifile räsi: ").append(edition.getHash().substring(0, 10)).append("\n");
+        sb.append(getString(R.string.ebaturvaline_pin_kood)).append(edition.getPin()).append("\n");
+        sb.append(getString(R.string.verifile_r_si)).append(edition.getHash().substring(0, 10)).append("\n");
         tv.setText(sb.toString());
     }
 }

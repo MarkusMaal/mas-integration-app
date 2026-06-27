@@ -27,7 +27,7 @@
                 android:id="@+id/textView12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ikoonid"
+                android:text="@string/ikoonid"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -46,7 +46,7 @@
                         android:layout_width="165dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Ikoonide arv" />
+                        android:text="@string/ikoonide_arv" />
 
                     <EditText
                         android:id="@+id/iconsXBox"
@@ -78,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Veeris (px)" />
+                        android:text="@string/veeris_px" />
 
                     <EditText
                         android:id="@+id/marginPxBox"
@@ -100,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Suurus (suhteline)" />
+                        android:text="@string/suurus_suhteline" />
 
                     <EditText
                         android:id="@+id/relativeSizeBox"
@@ -116,47 +116,48 @@
                 android:id="@+id/lockCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lukusta ikoonid" />
+                android:text="@string/lukusta_ikoonid" />
 
             <TextView
                 android:id="@+id/textView13"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20sp"
-                android:text="Rakendused"
+                android:text="@string/rakendused"
                 android:textSize="20sp" />
 
             <ListView
                 android:id="@+id/appsListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10sp" />
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="20sp"
+                android:scrollbars="none" />
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
-                android:text="Varia"
+                android:text="@string/varia"
                 android:textSize="20sp" />
 
             <CheckBox
                 android:id="@+id/desktopIconsCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kuva töölauaikoonid" />
+                android:text="@string/kuva_t_lauaikoonid" />
 
             <CheckBox
                 android:id="@+id/markusStuffLogoCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kuva Markuse asjad logo" />
+                android:text="@string/kuva_markuse_asjad_logo" />
 
             <CheckBox
                 android:id="@+id/controlsCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kuva juhtnupud" />
+                android:text="@string/kuva_juhtnupud" />
         </LinearLayout>
 
     </LinearLayout>

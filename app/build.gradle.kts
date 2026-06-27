@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId = "ee.mas.integratsioonitarkvara"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
-        versionName = "0.3"
+        versionName = "0.3.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.flexbox)
+    implementation(libs.github.colorpicker)
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

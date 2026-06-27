@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 
 import androidx.activity.EdgeToEdge;
@@ -18,9 +20,7 @@ import androidx.activity.SystemBarStyle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -43,6 +43,7 @@ import ee.mas.integratsioonitarkvara.models.DesktopLayout;
 import ee.mas.integratsioonitarkvara.models.Edition;
 import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
 import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
+import ee.mas.integratsioonitarkvara.models.Scheme;
 import ee.mas.integratsioonitarkvara.services.ApiService;
 
 import okhttp3.OkHttpClient;
@@ -53,6 +54,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import com.mrudultora.colorpicker.ColorPickerPopUp;
+
 public class MainActivity extends AppCompatActivity {
 
     public static CommonConfig config;
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static MarkuStationGame[] markuStationGames;
     private static DesktopLayout desktopLayout;
+
+    private static Scheme scheme;
 
     private boolean firstLoad = true;
 
@@ -117,19 +122,19 @@ public class MainActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (Tabs.values()[position]) {
                 case WELCOME:
-                    tab.setText("Uudised");
+                    tab.setText(R.string.uudised);
                     break;
                 case MARKUSTATION:
-                    tab.setText("MarkuStation");
+                    tab.setText(R.string.markustation);
                     break;
                 case CONFIG:
-                    tab.setText("Konfiguratsioon");
+                    tab.setText(R.string.konfiguratsioon);
                     break;
                 case DESKTOP:
-                    tab.setText("Töölaud");
+                    tab.setText(R.string.t_laud);
                     break;
                 case ABOUT:
-                    tab.setText("Teave");
+                    tab.setText(R.string.teave);
                     break;
             }
         }).attach();
@@ -156,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        // causes issues with older Android versions, don't use
+        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
+        });*/
         getSupportActionBar().hide();
         try {
             updateVersion();
@@ -220,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case CONFIG:
                 enqueue(apiService.getConfig(), c -> config = c, this);
+                enqueue(apiService.getScheme(), s -> scheme = s, this);
                 break;
             case DESKTOP:
                 enqueue(apiService.getDesktopLayout(), d -> desktopLayout = d, this);
@@ -275,6 +281,59 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("app-version", getApplication().getBaseContext().getPackageManager().getPackageInfo(getApplication().getBaseContext().getPackageName(), 0).versionName);
         editor.apply();
+    }
+
+    public void updateScheme(View v) {
+        if (v instanceof Button) {
+            var b = (Button)v;
+            if (b.getId() == R.id.bgButton) {
+                var c = Color.valueOf(scheme.getBackgroundColor().getR() / 255f, scheme.getBackgroundColor().getG() / 255f, scheme.getBackgroundColor().getB() / 255f, scheme.getBackgroundColor().getA() / 255f);
+                ColorPickerPopUp colorPickerPopUp = new ColorPickerPopUp(this);
+                colorPickerPopUp.setShowAlpha(false)
+                        .setDefaultColor(c.toArgb())
+                        .setDialogTitle(getString(R.string.vali_taustav_rv))
+                        .setOnPickColorListener(new ColorPickerPopUp.OnPickColorListener() {
+                            @Override
+                            public void onColorPicked(int color) {
+                                scheme.setBackgroundColor(processColor(color));
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                colorPickerPopUp.dismissDialog();	// Dismiss the dialog.
+                            }
+                        })
+                        .show();
+            } else if (b.getId() == R.id.fgButton) {
+                var c = Color.valueOf(scheme.getForegroundColor().getR() / 255f, scheme.getForegroundColor().getG() / 255f, scheme.getForegroundColor().getB() / 255f, scheme.getForegroundColor().getA() / 255f);
+                ColorPickerPopUp colorPickerPopUp = new ColorPickerPopUp(this);
+                colorPickerPopUp.setShowAlpha(false)
+                        .setDefaultColor(c.toArgb())
+                        .setDialogTitle(getString(R.string.vali_esiplaani_v_rv))
+                        .setOnPickColorListener(new ColorPickerPopUp.OnPickColorListener() {
+                            @Override
+                            public void onColorPicked(int color) {
+                                scheme.setForegroundColor(processColor(color));
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                colorPickerPopUp.dismissDialog();	// Dismiss the dialog.
+                            }
+                        })
+                        .show();
+            }
+        }
+    }
+
+    private ee.mas.integratsioonitarkvara.models.Color processColor(int argb) {
+        var c = Color.valueOf(argb);
+        var mc = new ee.mas.integratsioonitarkvara.models.Color();
+        mc.setA((int)(255f * c.alpha()));
+        mc.setR((int)(255f * c.red()));
+        mc.setG((int)(255f * c.green()));
+        mc.setB((int)(255f * c.blue()));
+        return mc;
     }
 
     // copy-pasted from maia-app with minor modifications
@@ -359,14 +418,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void markuStationCheckboxClick(View view) {
-        if (view instanceof CheckBox) {
-            var cb = (CheckBox)view;
-            if (cb.getId() == R.id.introCheckbox) markuStationConfig.setPlayIntro(cb.isChecked());
-            else if (cb.getId() == R.id.creepypastaCheckbox) markuStationConfig.setCreepypastaIntro(cb.isChecked());
-            else if (cb.getId() == R.id.legacyCheckbox) markuStationConfig.setLegacyIntro(cb.isChecked());
-            else if (cb.getId() == R.id.specialCheckbox) markuStationConfig.setSpecialIntro(cb.isChecked());
+        try {
+            if (view instanceof CheckBox) {
+                var cb = (CheckBox) view;
+                if (cb.getId() == R.id.introCheckbox)
+                    markuStationConfig.setPlayIntro(cb.isChecked());
+                else if (cb.getId() == R.id.creepypastaCheckbox)
+                    markuStationConfig.setCreepypastaIntro(cb.isChecked());
+                else if (cb.getId() == R.id.legacyCheckbox)
+                    markuStationConfig.setLegacyIntro(cb.isChecked());
+                else if (cb.getId() == R.id.specialCheckbox)
+                    markuStationConfig.setSpecialIntro(cb.isChecked());
+            }
+            MainActivity.saveConfig(Tabs.MARKUSTATION);
+        } catch (NullPointerException e) {
+            Log.println(Log.ERROR, "Post request failed", e.getMessage());
         }
-        MainActivity.saveConfig(Tabs.MARKUSTATION);
     }
 
     private static class CommonConfigCallback implements Callback<CommonConfig> {
