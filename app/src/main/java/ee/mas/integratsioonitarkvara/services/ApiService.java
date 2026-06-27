@@ -35,4 +35,7 @@ public interface ApiService {
 
     @POST("markustation/config")
     Call<MarkuStationConfig> saveMarkuStationConfig(@Body MarkuStationConfig newConfig);
+
+    @POST("scheme")
+    Call<Scheme> saveScheme(@Body Scheme scheme);
 }

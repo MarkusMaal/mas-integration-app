@@ -380,6 +380,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onColorPicked(int color) {
                                 scheme.setBackgroundColor(processColor(color));
+                                saveConfig(Tabs.CONFIG);
                             }
 
                             @Override
@@ -398,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onColorPicked(int color) {
                                 scheme.setForegroundColor(processColor(color));
+                                saveConfig(Tabs.CONFIG);
                             }
 
                             @Override
@@ -481,7 +483,9 @@ public class MainActivity extends AppCompatActivity {
         switch (tab) {
             case CONFIG:
                 Call<CommonConfig> call = apiService.saveCommonConfig(config);
+                Call<Scheme> schemeCall = apiService.saveScheme(scheme);
                 call.enqueue(new CommonConfigCallback());
+                schemeCall.enqueue(new SchemeCallback());
                 break;
             case MARKUSTATION:
                 Call<MarkuStationConfig> call2 = apiService.saveMarkuStationConfig(markuStationConfig);
@@ -540,6 +544,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(@NonNull Call<MarkuStationConfig> call, @NonNull Throwable t) {
+            call.cancel();
+        }
+    }
+
+    private static class SchemeCallback implements Callback<Scheme> {
+        @Override
+        public void onResponse(@NonNull Call<Scheme> call, @NonNull Response<Scheme> response) {
+            //scheme = response.body();
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<Scheme> call, @NonNull Throwable t) {
             call.cancel();
         }
     }

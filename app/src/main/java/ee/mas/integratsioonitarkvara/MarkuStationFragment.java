@@ -76,11 +76,13 @@ public class MarkuStationFragment extends Fragment {
     @NonNull
     private static SimpleAdapter getSimpleAdapter(View view) {
         var gamesList = new ArrayList<HashMap<String, String>>();
-        for (var g : MainActivity.markuStationGames) {
-            HashMap<String,String> game = new HashMap<>();
-            game.put("Title", g.getName());
-            game.put("Executable", g.getExecutable());
-            gamesList.add(game);
+        if (MainActivity.markuStationGames != null) {
+            for (var g : MainActivity.markuStationGames) {
+                HashMap<String, String> game = new HashMap<>();
+                game.put("Title", g.getName());
+                game.put("Executable", g.getExecutable());
+                gamesList.add(game);
+            }
         }
         return new SimpleAdapter(view.getContext().getApplicationContext(), gamesList, android.R.layout.simple_list_item_2, new String[] {"Title", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
     }

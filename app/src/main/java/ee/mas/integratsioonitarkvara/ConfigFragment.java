@@ -40,6 +40,7 @@ public class ConfigFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 1) return;
                 try
                 {
                     var val = Integer.parseInt(s.toString());
