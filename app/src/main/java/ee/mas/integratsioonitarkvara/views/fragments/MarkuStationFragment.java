@@ -47,6 +47,7 @@ public class MarkuStationFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (MainActivity.markuStationConfig == null) return;
+                if (view == null) return;
                 MainActivity.markuStationConfig.setMonitorMode(position);
                 MainActivity.saveConfig(MainActivity.Tabs.MARKUSTATION, view.getContext());
             }

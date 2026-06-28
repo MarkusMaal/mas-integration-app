@@ -85,13 +85,19 @@ public class DesktopFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.markusStuffLogoCheckbox)).setChecked(desktopLayout.isShowLogo());
         ((CheckBox)view.findViewById(R.id.controlsCheckbox)).setChecked(desktopLayout.isShowActions());
         var appsView = ((ListView)view.findViewById(R.id.appsListView));
-        appsView.setOnItemClickListener((parent, view1, position, id) -> {
-            DialogBuilders.showDesktopEditDialog(view.getContext(), position, desktopLayout);
-        });
-        final Button addAppButton = view.findViewById(R.id.addAppButton);
-        addAppButton.setOnClickListener(view2 -> DialogBuilders.showDesktopCreateDialog(view.getContext(), desktopLayout));
-        SimpleAdapter sa = getSimpleAdapter(desktopLayout, view);
-        appsView.setAdapter(sa);
+        final SimpleAdapter[] sa = {getSimpleAdapter(desktopLayout, view)};
+        appsView.setAdapter(sa[0]);
+        appsView.setOnItemClickListener((parent, view1, position, id) ->
+                DialogBuilders.showDesktopEditDialog(view.getContext(), position, desktopLayout, desktopIcon -> {
+                    var children = desktopLayout.getChildren();
+                    children[position] = desktopIcon;
+                    desktopLayout.setChildren(children);
+                    MainActivity.saveConfig(MainActivity.Tabs.DESKTOP, view.getContext());
+                    MainActivity.sendCommand("Restart", "", view.getContext());
+                    sa[0] = getSimpleAdapter(desktopLayout, view);
+                    appsView.setAdapter(sa[0]);
+                    getListViewSize(appsView);
+                }));
         getListViewSize(appsView);
 
         applyButton.setOnClickListener(v -> {

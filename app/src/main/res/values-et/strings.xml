@@ -41,9 +41,9 @@
     <string name="kuva_juhtnupud">Kuva juhtnupud</string>
     <string name="monitori_re_iim">Monitori režiim</string>
     <string name="luba_introd">Luba introd</string>
-    <string name="creepypasta_intro">Creepypasta intro</string>
-    <string name="p_randintro">Pärandintro</string>
-    <string name="special_intro">Special intro</string>
+    <string name="creepypasta_intro">Creepypasta intro (MarkuStation 1)</string>
+    <string name="p_randintro">Pärandintro (MarkuStation 2)</string>
+    <string name="special_intro">Special intro (MarkuStation 1)</string>
     <string name="vali_taustav_rv">Vali taustavärv</string>
     <string name="vali_esiplaani_v_rv">Vali esiplaani värv</string>
     <string name="uudised">Uudised</string>
@@ -98,4 +98,6 @@
     <string name="add">Lisa</string>
     <string name="add_desktop_icon">Töölauaikooni lisamine</string>
     <string name="apply">Rakenda</string>
+    <string name="markuse_arvuti_asjad">Markuse arvuti asjad</string>
+    <string name="unknown_edition">Tundmatu väljaanne</string>
 </resources>

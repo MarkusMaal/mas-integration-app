@@ -40,9 +40,9 @@
     <string name="kuva_juhtnupud">Show controls</string>
     <string name="monitori_re_iim">Monitor mode</string>
     <string name="luba_introd">Enable intros</string>
-    <string name="creepypasta_intro">Creepypasta intro</string>
-    <string name="p_randintro">Legacy intro</string>
-    <string name="special_intro">Special intro</string>
+    <string name="creepypasta_intro">Creepypasta intro (MarkuStation 1)</string>
+    <string name="p_randintro">Legacy intro (MarkuStation 2)</string>
+    <string name="special_intro">Special intro (MarkuStation 1)</string>
     <string name="vali_taustav_rv">Choose background color</string>
     <string name="vali_esiplaani_v_rv">Choose foreground color</string>
     <string name="uudised">News</string>
@@ -103,4 +103,6 @@
     <string name="add">Add</string>
     <string name="add_desktop_icon">Add desktop icon</string>
     <string name="apply">Apply</string>
+    <string name="markuse_arvuti_asjad">Markus\' computer stuff</string>
+    <string name="unknown_edition">Unknown edition</string>
 </resources>
