@@ -97,4 +97,5 @@
     <string name="edit_desktop_icon">Töölauaikooni muutmine</string>
     <string name="add">Lisa</string>
     <string name="add_desktop_icon">Töölauaikooni lisamine</string>
+    <string name="apply">Rakenda</string>
 </resources>

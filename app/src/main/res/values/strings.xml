@@ -102,4 +102,5 @@
     <string name="edit_desktop_icon">Edit desktop icon</string>
     <string name="add">Add</string>
     <string name="add_desktop_icon">Add desktop icon</string>
+    <string name="apply">Apply</string>
 </resources>

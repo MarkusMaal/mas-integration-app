@@ -1,4 +1,4 @@
-package ee.mas.integratsioonitarkvara;
+package ee.mas.integratsioonitarkvara.views;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceFragmentCompat;
+
+import ee.mas.integratsioonitarkvara.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

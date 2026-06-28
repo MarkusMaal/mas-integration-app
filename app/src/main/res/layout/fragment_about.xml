@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:padding="15sp"
         android:paddingBottom="40sp"
-        tools:context=".AboutFragment">
+        tools:context=".views.fragments.AboutFragment">
 
 
         <TextView
@@ -69,7 +69,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/error"
-            android:name="ee.mas.integratsioonitarkvara.ErrorFragment"
+            android:name="ee.mas.integratsioonitarkvara.views.fragments.ErrorFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:visibility="gone" />

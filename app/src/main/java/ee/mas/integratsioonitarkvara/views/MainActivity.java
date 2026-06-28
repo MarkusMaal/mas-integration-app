@@ -1,4 +1,4 @@
-package ee.mas.integratsioonitarkvara;
+package ee.mas.integratsioonitarkvara.views;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -7,11 +7,9 @@ import android.app.ComponentCaller;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,26 +31,26 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
-import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.URL;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import ee.mas.integratsioonitarkvara.DialogBuilders;
+import ee.mas.integratsioonitarkvara.R;
+import ee.mas.integratsioonitarkvara.SharedPrefHelpers;
+import ee.mas.integratsioonitarkvara.WolHelpers;
 import ee.mas.integratsioonitarkvara.models.CommonConfig;
+import ee.mas.integratsioonitarkvara.models.DesktopCommand;
 import ee.mas.integratsioonitarkvara.models.DesktopLayout;
 import ee.mas.integratsioonitarkvara.models.Edition;
 import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
@@ -60,6 +58,11 @@ import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
 import ee.mas.integratsioonitarkvara.models.Scheme;
 import ee.mas.integratsioonitarkvara.services.ApiService;
 
+import ee.mas.integratsioonitarkvara.views.fragments.AboutFragment;
+import ee.mas.integratsioonitarkvara.views.fragments.ConfigFragment;
+import ee.mas.integratsioonitarkvara.views.fragments.DesktopFragment;
+import ee.mas.integratsioonitarkvara.views.fragments.MarkuStationFragment;
+import ee.mas.integratsioonitarkvara.views.fragments.Welcome;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -68,8 +71,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import com.mrudultora.colorpicker.ColorPickerPopUp;
-
 public class MainActivity extends AppCompatActivity {
 
     public static CommonConfig config;
@@ -77,17 +78,13 @@ public class MainActivity extends AppCompatActivity {
     public static MarkuStationConfig markuStationConfig;
 
     public static MarkuStationGame[] markuStationGames;
-    private static DesktopLayout desktopLayout;
+    public static DesktopLayout desktopLayout;
 
     private static Scheme scheme;
 
-    private boolean firstLoad = true;
-
-    private String auth = "";
-
     private static ApiService apiService;
 
-    protected enum Tabs {
+    public enum Tabs {
         WELCOME,
         MARKUSTATION,
         CONFIG,
@@ -115,10 +112,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         httpClient.addInterceptor(chain -> {
-            Request request = chain.request().newBuilder().addHeader("Auth", getSettingsAuth()).build();
+            Request request = chain.request().newBuilder().addHeader("Auth", SharedPrefHelpers.getSettingsAuth(this)).build();
             return chain.proceed(request);
         });
-        var endPoint = getSettingsUrl();
+        var endPoint = SharedPrefHelpers.getSettingsUrl(this);
         apiService = new Retrofit.Builder()
                 .baseUrl(endPoint)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -174,17 +171,10 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageSelected(position);
             }
         });
-
-
-        // causes issues with older Android versions, don't use
-        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });*/
-        getSupportActionBar().hide();
+        var ab = getSupportActionBar();
+        if (ab != null) ab.hide();
         try {
-            updateVersion();
+            SharedPrefHelpers.updateVersion(this.getBaseContext().getApplicationContext());
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -248,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 var imt = (ImageView) findViewById(R.id.deviceBackground);
                 var imtl = (ImageView) findViewById(R.id.deviceLockScreen);
                 if (imv == null) break;
-                var endpoint = getSettingsUrl();
+                var endpoint = SharedPrefHelpers.getSettingsUrl(this);
                 imv.setOnClickListener(v -> saveToGallery(endpoint, "bg_desktop.png"));
                 iml.setOnClickListener(v -> saveToGallery(endpoint, "bg_login.png"));
                 imu.setOnClickListener(v -> saveToGallery(endpoint, "bg_uncommon.png"));
@@ -269,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
                 enqueue(apiService.getDesktopLayout(), d -> desktopLayout = d, this);
                 break;
         }
-        firstLoad = false;
     }
 
     private void loadBackground(String endpoint) {
@@ -299,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (uri != null) {
                     try (OutputStream out = getContentResolver().openOutputStream(uri)) {
+                        if (out == null) throw new IOException();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -316,15 +306,23 @@ public class MainActivity extends AppCompatActivity {
         thr.start();
     }
 
+    public static void sendCommand(String type, String args, Context ctx) {
+        var desktopCommand = new DesktopCommand();
+        desktopCommand.setArguments(args);
+        desktopCommand.setType(type);
+        enqueue(apiService.sendDesktopCommand(desktopCommand), null, ctx);
+    }
 
-
-    private <T> void enqueue(Call<T> call, Consumer<T> onSuccess, Context context) {
+    private static <T> void enqueue(Call<T> call, Consumer<T> onSuccess, Context context) {
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<T> call,
                                    @NonNull Response<T> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    findViewById(R.id.progressBar).setVisibility(GONE);
+                    if (context instanceof MainActivity) {
+                        ((MainActivity)context).findViewById(R.id.progressBar).setVisibility(GONE);
+                    }
+                    if (onSuccess == null) return;
                     onSuccess.accept(response.body());
                 }
             }
@@ -333,9 +331,10 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<T> call,
                                   @NonNull Throwable t) {
                 Log.println(Log.ERROR, "API request failed", Objects.requireNonNull(t.getMessage()));
-                if (!firstLoad) {
-                    findViewById(R.id.progressBar).setVisibility(GONE);
+                if (context instanceof MainActivity) {
+                    ((MainActivity)context).findViewById(R.id.progressBar).setVisibility(GONE);
                 }
+                if (onSuccess == null) return;
                 onSuccess.accept(null);
             }
         });
@@ -346,132 +345,21 @@ public class MainActivity extends AppCompatActivity {
         finish();
         startActivity(intent);
     }
-
-    private String getSettingsUrl() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        var ip = sp.getString("ip", getString(R.string.defaultIp));
-        var port = sp.getString("port", getString(R.string.defaultPort));
-        return "http://" + ip + ":" + port;
-    }
-
-    private String getSettingsAuth() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        auth = sp.getString("code", "");
-        return auth;
-    }
-
-    private void updateVersion() throws PackageManager.NameNotFoundException {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("app-version", getApplication().getBaseContext().getPackageManager().getPackageInfo(getApplication().getBaseContext().getPackageName(), 0).versionName);
-        editor.apply();
-    }
-
     public void updateScheme(View v) {
         if (v instanceof Button) {
             var b = (Button)v;
             if (b.getId() == R.id.bgButton) {
-                var c = Color.valueOf(scheme.getBackgroundColor().getR() / 255f, scheme.getBackgroundColor().getG() / 255f, scheme.getBackgroundColor().getB() / 255f, scheme.getBackgroundColor().getA() / 255f);
-                ColorPickerPopUp colorPickerPopUp = new ColorPickerPopUp(this);
-                colorPickerPopUp.setShowAlpha(false)
-                        .setDefaultColor(c.toArgb())
-                        .setDialogTitle(getString(R.string.vali_taustav_rv))
-                        .setOnPickColorListener(new ColorPickerPopUp.OnPickColorListener() {
-                            @Override
-                            public void onColorPicked(int color) {
-                                scheme.setBackgroundColor(processColor(color));
-                                saveConfig(Tabs.CONFIG);
-                            }
-
-                            @Override
-                            public void onCancel() {
-                                colorPickerPopUp.dismissDialog();	// Dismiss the dialog.
-                            }
-                        })
-                        .show();
+                DialogBuilders.showColorPickerDialog(this, c -> scheme.setBackgroundColor(c), scheme);
+                saveConfig(MainActivity.Tabs.CONFIG, v.getContext());
             } else if (b.getId() == R.id.fgButton) {
-                var c = Color.valueOf(scheme.getForegroundColor().getR() / 255f, scheme.getForegroundColor().getG() / 255f, scheme.getForegroundColor().getB() / 255f, scheme.getForegroundColor().getA() / 255f);
-                ColorPickerPopUp colorPickerPopUp = new ColorPickerPopUp(this);
-                colorPickerPopUp.setShowAlpha(false)
-                        .setDefaultColor(c.toArgb())
-                        .setDialogTitle(getString(R.string.vali_esiplaani_v_rv))
-                        .setOnPickColorListener(new ColorPickerPopUp.OnPickColorListener() {
-                            @Override
-                            public void onColorPicked(int color) {
-                                scheme.setForegroundColor(processColor(color));
-                                saveConfig(Tabs.CONFIG);
-                            }
-
-                            @Override
-                            public void onCancel() {
-                                colorPickerPopUp.dismissDialog();	// Dismiss the dialog.
-                            }
-                        })
-                        .show();
+                DialogBuilders.showColorPickerDialog(this, c -> scheme.setForegroundColor(c), scheme);
+                saveConfig(MainActivity.Tabs.CONFIG, v.getContext());
             }
         }
     }
 
-    private ee.mas.integratsioonitarkvara.models.Color processColor(int argb) {
-        var c = Color.valueOf(argb);
-        var mc = new ee.mas.integratsioonitarkvara.models.Color();
-        mc.setA((int)(255f * c.alpha()));
-        mc.setR((int)(255f * c.red()));
-        mc.setG((int)(255f * c.green()));
-        mc.setB((int)(255f * c.blue()));
-        return mc;
-    }
-
-    // copy-pasted from maia-app with minor modifications
     public void wakeUp(View v) {
-        Thread thread = new Thread(() -> {
-            try {
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-                var ip = sp.getString("ip", getString(R.string.defaultIp));
-                var wp = sp.getString("wol-port", "9");
-                var mac = sp.getString("wol-mac", "00:00:00:00:00:00").toUpperCase();
-                int port = Integer.parseInt(wp);
-                byte[] macBytes = getMacBytes(mac);
-                byte[] bytes = new byte[6 + 16 * macBytes.length];
-                for (int i = 0; i < 6; i++) {
-                    bytes[i] = (byte) 0xff;
-                }
-                for (int i = 6; i < bytes.length; i += macBytes.length) {
-                    System.arraycopy(macBytes, 0, bytes, i, macBytes.length);
-                }
-
-                InetAddress address = InetAddress.getByName(ip);
-                DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
-                DatagramSocket socket = new DatagramSocket();
-                socket.send(packet);
-                socket.close();
-
-                Snackbar snb = Snackbar.make(v, getString(R.string.packetSent), 2000);
-                snb.show();
-            } catch (Exception e) {
-                Snackbar snb = Snackbar.make(v, getString(R.string.packetFail) + " " + e.getMessage(), 2000);
-                snb.show();
-            }
-
-        });
-        thread.start();
-    }
-
-    private static byte[] getMacBytes(String macStr) throws IllegalArgumentException {
-        byte[] bytes = new byte[6];
-        String[] hex = macStr.split("(\\:|\\-)");
-        if (hex.length != 6) {
-            throw new IllegalArgumentException("Invalid MAC address.");
-        }
-        try {
-            for (int i = 0; i < 6; i++) {
-                bytes[i] = (byte) Integer.parseInt(hex[i], 16);
-            }
-        }
-        catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid hex digit in MAC address.");
-        }
-        return bytes;
+        WolHelpers.wakeUp(v);
     }
 
     public void appSettings(View view) {
@@ -479,17 +367,18 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.this.startActivity(myIntent);
     }
 
-    public static void saveConfig(Tabs tab) {
+    public static void saveConfig(Tabs tab, Context ctx) {
         switch (tab) {
             case CONFIG:
-                Call<CommonConfig> call = apiService.saveCommonConfig(config);
-                Call<Scheme> schemeCall = apiService.saveScheme(scheme);
-                call.enqueue(new CommonConfigCallback());
-                schemeCall.enqueue(new SchemeCallback());
+                enqueue(apiService.saveCommonConfig(config), cc -> config = cc, ctx);
+                enqueue(apiService.saveScheme(scheme), s -> scheme = s, ctx);
                 break;
             case MARKUSTATION:
-                Call<MarkuStationConfig> call2 = apiService.saveMarkuStationConfig(markuStationConfig);
-                call2.enqueue(new MarkuStationConfigCallback());
+                enqueue(apiService.saveMarkuStationConfig(markuStationConfig), mc -> markuStationConfig = mc, ctx);
+                enqueue(apiService.saveMarkuStationGames(markuStationGames), mg -> markuStationGames = mg, ctx);
+                break;
+            case DESKTOP:
+                enqueue(apiService.saveDesktopLayout(desktopLayout), dl -> desktopLayout = dl, ctx);
                 break;
         }
     }
@@ -501,7 +390,36 @@ public class MainActivity extends AppCompatActivity {
             else if (cb.getId() == R.id.scheduleCheckbox) config.setAllowScheduledTasks(cb.isChecked());
             else if (cb.getId() == R.id.desktopNotesCheckbox) config.setAutostartNotes(cb.isChecked());
         }
-        MainActivity.saveConfig(Tabs.CONFIG);
+        MainActivity.saveConfig(Tabs.CONFIG, this);
+    }
+
+    public void desktopCheckboxClick(View view) {
+        try {
+            if (view instanceof CheckBox) {
+                var cb = (CheckBox) view;
+                var desktopCommand = new DesktopCommand();
+                desktopCommand.setArguments(Boolean.toString(cb.isChecked()));
+                if (cb.getId() == R.id.desktopIconsCheckbox) {
+                    desktopCommand.setType("IsIconVisible");
+                    desktopLayout.setShowIcons(cb.isChecked());
+                } else if (cb.getId() == R.id.markusStuffLogoCheckbox) {
+                    desktopCommand.setType("IsLogoVisible");
+                    desktopLayout.setShowLogo(cb.isChecked());
+                } else if (cb.getId() == R.id.controlsCheckbox) {
+                    desktopCommand.setType("IsActionVisible");
+                    desktopLayout.setShowActions(cb.isChecked());
+                } else if (cb.getId() == R.id.lockCheckbox) {
+                    desktopCommand.setType("Lock");
+                    desktopLayout.setLockIcons(cb.isChecked());
+                }
+                enqueue(apiService.sendDesktopCommand(desktopCommand), null, this);
+            }
+        } catch (NullPointerException e) {
+            var msg = e.getMessage();
+            if (msg != null) {
+                Log.println(Log.ERROR, "Post request failed", msg);
+            }
+        }
     }
 
 
@@ -518,45 +436,12 @@ public class MainActivity extends AppCompatActivity {
                 else if (cb.getId() == R.id.specialCheckbox)
                     markuStationConfig.setSpecialIntro(cb.isChecked());
             }
-            MainActivity.saveConfig(Tabs.MARKUSTATION);
+            MainActivity.saveConfig(Tabs.MARKUSTATION, this);
         } catch (NullPointerException e) {
-            Log.println(Log.ERROR, "Post request failed", e.getMessage());
-        }
-    }
-
-    private static class CommonConfigCallback implements Callback<CommonConfig> {
-        @Override
-        public void onResponse(@NonNull Call<CommonConfig> call, @NonNull Response<CommonConfig> response) {
-            config = response.body();
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<CommonConfig> call, @NonNull Throwable t) {
-            call.cancel();
-        }
-    }
-
-    private static class MarkuStationConfigCallback implements Callback<MarkuStationConfig> {
-        @Override
-        public void onResponse(@NonNull Call<MarkuStationConfig> call, @NonNull Response<MarkuStationConfig> response) {
-            markuStationConfig = response.body();
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<MarkuStationConfig> call, @NonNull Throwable t) {
-            call.cancel();
-        }
-    }
-
-    private static class SchemeCallback implements Callback<Scheme> {
-        @Override
-        public void onResponse(@NonNull Call<Scheme> call, @NonNull Response<Scheme> response) {
-            //scheme = response.body();
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<Scheme> call, @NonNull Throwable t) {
-            call.cancel();
+            var msg = e.getMessage();
+            if (msg != null) {
+                Log.println(Log.ERROR, "Post request failed", msg);
+            }
         }
     }
 }

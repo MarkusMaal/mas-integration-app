@@ -1,13 +1,16 @@
-package ee.mas.integratsioonitarkvara;
+package ee.mas.integratsioonitarkvara.views.fragments;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +23,15 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
+import ee.mas.integratsioonitarkvara.DialogBuilders;
+import ee.mas.integratsioonitarkvara.R;
 import ee.mas.integratsioonitarkvara.models.DesktopLayout;
+import ee.mas.integratsioonitarkvara.views.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,23 +71,41 @@ public class DesktopFragment extends Fragment {
         }
         view.findViewById(R.id.desktopLayoutContainer).setVisibility(VISIBLE);
         view.findViewById(R.id.error).setVisibility(GONE);
-        ((EditText)view.findViewById(R.id.iconsXBox)).setText(String.valueOf(desktopLayout.getIconCountX()));
-        ((EditText)view.findViewById(R.id.iconsYBox)).setText(String.valueOf(desktopLayout.getIconCountY()));
-        ((EditText)view.findViewById(R.id.marginPxBox)).setText(String.valueOf(desktopLayout.getIconPadding()));
-        ((EditText)view.findViewById(R.id.relativeSizeBox)).setText(String.valueOf(desktopLayout.getIconSize()));
+        final EditText iconsXBox = view.findViewById(R.id.iconsXBox);
+        final EditText iconsYBox = view.findViewById(R.id.iconsYBox);
+        final EditText marginPxBox = view.findViewById(R.id.marginPxBox);
+        final EditText relativeSizeBox = view.findViewById(R.id.relativeSizeBox);
+        final Button applyButton = view.findViewById(R.id.applyButton);
+        iconsXBox.setText(String.valueOf(desktopLayout.getIconCountX()));
+        iconsYBox.setText(String.valueOf(desktopLayout.getIconCountY()));
+        marginPxBox.setText(String.valueOf(desktopLayout.getIconPadding()));
+        relativeSizeBox.setText(String.valueOf(desktopLayout.getIconSize()));
         ((CheckBox)view.findViewById(R.id.lockCheckbox)).setChecked(desktopLayout.isLockIcons());
         ((CheckBox)view.findViewById(R.id.desktopIconsCheckbox)).setChecked(desktopLayout.isShowIcons());
         ((CheckBox)view.findViewById(R.id.markusStuffLogoCheckbox)).setChecked(desktopLayout.isShowLogo());
         ((CheckBox)view.findViewById(R.id.controlsCheckbox)).setChecked(desktopLayout.isShowActions());
         var appsView = ((ListView)view.findViewById(R.id.appsListView));
         appsView.setOnItemClickListener((parent, view1, position, id) -> {
-            DialogBuilders.ShowDesktopEditDialog(view.getContext(), position, desktopLayout);
+            DialogBuilders.showDesktopEditDialog(view.getContext(), position, desktopLayout);
         });
         final Button addAppButton = view.findViewById(R.id.addAppButton);
-        addAppButton.setOnClickListener(view2 -> DialogBuilders.ShowDesktopCreateDialog(view.getContext(), desktopLayout));
+        addAppButton.setOnClickListener(view2 -> DialogBuilders.showDesktopCreateDialog(view.getContext(), desktopLayout));
         SimpleAdapter sa = getSimpleAdapter(desktopLayout, view);
         appsView.setAdapter(sa);
         getListViewSize(appsView);
+
+        applyButton.setOnClickListener(v -> {
+            try {
+                MainActivity.desktopLayout.setIconCountX(Integer.parseInt(iconsXBox.getText().toString()));
+                MainActivity.desktopLayout.setIconCountY(Integer.parseInt(iconsYBox.getText().toString()));
+                MainActivity.desktopLayout.setIconSize(Integer.parseInt(relativeSizeBox.getText().toString()));
+                MainActivity.desktopLayout.setIconPadding(Integer.parseInt(marginPxBox.getText().toString()));
+            } catch (NumberFormatException ignored) {
+                return;
+            }
+            MainActivity.saveConfig(MainActivity.Tabs.DESKTOP, v.getContext());
+            MainActivity.sendCommand("Restart", "", v.getContext());
+        });
     }
 
     @NonNull

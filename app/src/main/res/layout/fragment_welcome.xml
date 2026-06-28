@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Welcome">
+    tools:context=".views.fragments.Welcome">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/error"
-        android:name="ee.mas.integratsioonitarkvara.ErrorFragment"
+        android:name="ee.mas.integratsioonitarkvara.views.fragments.ErrorFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:visibility="gone" />

@@ -1,9 +1,9 @@
-package ee.mas.integratsioonitarkvara;
+package ee.mas.integratsioonitarkvara.views.fragments;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import static ee.mas.integratsioonitarkvara.DesktopFragment.getListViewSize;
+import static ee.mas.integratsioonitarkvara.views.fragments.DesktopFragment.getListViewSize;
 
 import android.os.Bundle;
 
@@ -22,8 +22,11 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ee.mas.integratsioonitarkvara.DialogBuilders;
+import ee.mas.integratsioonitarkvara.R;
 import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
 import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
+import ee.mas.integratsioonitarkvara.views.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +48,7 @@ public class MarkuStationFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (MainActivity.markuStationConfig == null) return;
                 MainActivity.markuStationConfig.setMonitorMode(position);
-                MainActivity.saveConfig(MainActivity.Tabs.MARKUSTATION);
+                MainActivity.saveConfig(MainActivity.Tabs.MARKUSTATION, view.getContext());
             }
 
             @Override
@@ -68,10 +71,13 @@ public class MarkuStationFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.specialCheckbox)).setChecked(config.isSpecialIntro());
         ((Spinner)view.findViewById(R.id.monitorModeSpinner)).setSelection(config.getMonitorMode());
         var gamesView = ((ListView)view.findViewById(R.id.gamesListView));
-        final SimpleAdapter[] adapter = {getSimpleAdapter(view)};
+        SimpleAdapter[] adapter = {getSimpleAdapter(view)};
         gamesView.setAdapter(adapter[0]);
         gamesView.setOnItemClickListener((parent, view1, position, id) -> {
-            DialogBuilders.ShowMsEditDialog(view.getContext(), position, MainActivity.markuStationGames);
+            DialogBuilders.showMsEditDialog(view.getContext(), position, MainActivity.markuStationGames, mg -> {
+                adapter[0] = getSimpleAdapter(view);
+                gamesView.setAdapter(adapter[0]);
+            });
             adapter[0] = getSimpleAdapter(view);
             gamesView.setAdapter(adapter[0]);
             getListViewSize(gamesView);

@@ -8,7 +8,7 @@
     android:gravity="left"
     android:orientation="vertical"
     android:padding="15sp"
-    tools:context=".ConfigFragment">
+    tools:context=".views.fragments.ConfigFragment">
 
     <LinearLayout
         android:id="@+id/configLayout"
@@ -163,7 +163,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/error"
-            android:name="ee.mas.integratsioonitarkvara.ErrorFragment"
+            android:name="ee.mas.integratsioonitarkvara.views.fragments.ErrorFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context=".DesktopFragment">
+        tools:context=".views.fragments.DesktopFragment">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/error"
-            android:name="ee.mas.integratsioonitarkvara.ErrorFragment"
+            android:name="ee.mas.integratsioonitarkvara.views.fragments.ErrorFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -117,7 +117,14 @@
                 android:id="@+id/lockCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="desktopCheckboxClick"
                 android:text="@string/lukusta_ikoonid" />
+
+            <Button
+                android:id="@+id/applyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/apply" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -160,18 +167,21 @@
                 android:id="@+id/desktopIconsCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="desktopCheckboxClick"
                 android:text="@string/kuva_t_lauaikoonid" />
 
             <CheckBox
                 android:id="@+id/markusStuffLogoCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="desktopCheckboxClick"
                 android:text="@string/kuva_markuse_asjad_logo" />
 
             <CheckBox
                 android:id="@+id/controlsCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="desktopCheckboxClick"
                 android:text="@string/kuva_juhtnupud" />
         </LinearLayout>
 

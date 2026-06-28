@@ -1,4 +1,4 @@
-package ee.mas.integratsioonitarkvara;
+package ee.mas.integratsioonitarkvara.views.fragments;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import ee.mas.integratsioonitarkvara.R;
 import ee.mas.integratsioonitarkvara.models.Edition;
 
 /**

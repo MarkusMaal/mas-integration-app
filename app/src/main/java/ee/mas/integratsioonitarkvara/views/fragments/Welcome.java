@@ -1,4 +1,4 @@
-package ee.mas.integratsioonitarkvara;
+package ee.mas.integratsioonitarkvara.views.fragments;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -21,6 +21,9 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import ee.mas.integratsioonitarkvara.R;
+import ee.mas.integratsioonitarkvara.views.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
