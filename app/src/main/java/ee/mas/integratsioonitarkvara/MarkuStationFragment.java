@@ -68,8 +68,14 @@ public class MarkuStationFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.specialCheckbox)).setChecked(config.isSpecialIntro());
         ((Spinner)view.findViewById(R.id.monitorModeSpinner)).setSelection(config.getMonitorMode());
         var gamesView = ((ListView)view.findViewById(R.id.gamesListView));
-        SimpleAdapter adapter = getSimpleAdapter(view);
-        gamesView.setAdapter(adapter);
+        final SimpleAdapter[] adapter = {getSimpleAdapter(view)};
+        gamesView.setAdapter(adapter[0]);
+        gamesView.setOnItemClickListener((parent, view1, position, id) -> {
+            DialogBuilders.ShowMsEditDialog(view.getContext(), position, MainActivity.markuStationGames);
+            adapter[0] = getSimpleAdapter(view);
+            gamesView.setAdapter(adapter[0]);
+            getListViewSize(gamesView);
+        });
         getListViewSize(gamesView);
     }
 

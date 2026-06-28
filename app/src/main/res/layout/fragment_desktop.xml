@@ -119,20 +119,34 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lukusta_ikoonid" />
 
-            <TextView
-                android:id="@+id/textView13"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20sp"
-                android:text="@string/rakendused"
-                android:textSize="20sp" />
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/addAppButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/add" />
+
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20sp"
+                    android:text="@string/rakendused"
+                    android:textSize="20sp" />
+
+            </FrameLayout>
 
             <ListView
                 android:id="@+id/appsListView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="20sp"
-                android:scrollbars="none" />
+                android:scrollbars="none"
+                tools:ignore="NestedScrolling" />
 
             <TextView
                 android:id="@+id/textView6"

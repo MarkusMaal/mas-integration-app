@@ -92,4 +92,14 @@
     <string name="games">Games</string>
     <string name="defaultIp" translatable="false">192.168.1.201</string>
     <string name="defaultPort" translatable="false">14415</string>
+    <string name="location">Location:</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="icon">Icon</string>
+    <string name="command_line">Command line:</string>
+    <string name="edit_game">Edit game</string>
+    <string name="edit_desktop_icon">Edit desktop icon</string>
+    <string name="add">Add</string>
+    <string name="add_desktop_icon">Add desktop icon</string>
 </resources>

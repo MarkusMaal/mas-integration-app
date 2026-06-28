@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -71,6 +72,11 @@ public class DesktopFragment extends Fragment {
         ((CheckBox)view.findViewById(R.id.markusStuffLogoCheckbox)).setChecked(desktopLayout.isShowLogo());
         ((CheckBox)view.findViewById(R.id.controlsCheckbox)).setChecked(desktopLayout.isShowActions());
         var appsView = ((ListView)view.findViewById(R.id.appsListView));
+        appsView.setOnItemClickListener((parent, view1, position, id) -> {
+            DialogBuilders.ShowDesktopEditDialog(view.getContext(), position, desktopLayout);
+        });
+        final Button addAppButton = view.findViewById(R.id.addAppButton);
+        addAppButton.setOnClickListener(view2 -> DialogBuilders.ShowDesktopCreateDialog(view.getContext(), desktopLayout));
         SimpleAdapter sa = getSimpleAdapter(desktopLayout, view);
         appsView.setAdapter(sa);
         getListViewSize(appsView);

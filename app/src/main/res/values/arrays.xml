@@ -5,4 +5,21 @@
         <item>@string/monitor_extend</item>
         <item>@string/monitor_duplicate</item>
     </string-array>
+    <string-array name="desktop_icons_array">
+        <item>Apps</item>
+        <item>Excel</item>
+        <item>Folder</item>
+        <item>Games</item>
+        <item>LockA</item>
+        <item>LockB</item>
+        <item>Maia</item>
+        <item>Player</item>
+        <item>PowerPoint</item>
+        <item>Reset</item>
+        <item>Word</item>
+        <item>Www</item>
+        <item>EyeA</item>
+        <item>EyeB</item>
+        <item>Mas</item>
+    </string-array>
 </resources>
