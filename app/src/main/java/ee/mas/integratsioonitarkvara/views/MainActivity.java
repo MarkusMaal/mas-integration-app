@@ -28,6 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -52,6 +55,7 @@ import ee.mas.integratsioonitarkvara.WolHelpers;
 import ee.mas.integratsioonitarkvara.models.CommonConfig;
 import ee.mas.integratsioonitarkvara.models.DesktopCommand;
 import ee.mas.integratsioonitarkvara.models.DesktopLayout;
+import ee.mas.integratsioonitarkvara.models.DeviceRequest;
 import ee.mas.integratsioonitarkvara.models.Edition;
 import ee.mas.integratsioonitarkvara.models.MarkuStationConfig;
 import ee.mas.integratsioonitarkvara.models.MarkuStationGame;
@@ -105,6 +109,13 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
     }
 
+    public static void enqueueVerifyCode(String code, Context ctx) {
+        var dr = new DeviceRequest();
+        dr.setDeviceType(Welcome.checkIsTablet(ctx) ? "mta" : "mtel");
+        enqueue(apiService.sendVerifyDeviceRequest(dr, code), s -> {
+        }, ctx);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         httpClient.addInterceptor(chain -> {
-            Request request = chain.request().newBuilder().addHeader("Auth", SharedPrefHelpers.getSettingsAuth(this)).build();
+            Request request = chain.request().newBuilder().addHeader("DeviceType", Welcome.checkIsTablet(this) ? "mta" : "mtel").build();
             return chain.proceed(request);
         });
         var endPoint = SharedPrefHelpers.getSettingsUrl(this);
@@ -179,6 +190,32 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         loadBackground(endPoint);
+
+
+        var ctx = this;
+
+        apiService.checkDeviceStatus().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                var code = response.code();
+                if (code == 401) {
+                    var dr = new DeviceRequest();
+                    dr.setDeviceType(Welcome.checkIsTablet(ctx) ? "mta" : "mtel");
+                    enqueue(apiService.sendAddDeviceRequest(dr), s -> {
+                    }, ctx);
+                    Intent myIntent = new Intent(MainActivity.this, DeviceValidation.class);
+                    MainActivity.this.startActivity(myIntent);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull Throwable t) {}
+        });
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(systemBars.left, systemBars.top / 2, systemBars.right, systemBars.bottom);
+            return insets;
+        });
     }
 
 

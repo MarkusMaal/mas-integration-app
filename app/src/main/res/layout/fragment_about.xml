@@ -75,9 +75,11 @@
             tools:visibility="gone" />
 
         <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/flexboxAbout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:flexWrap="wrap">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,6 +87,7 @@
                 android:layout_marginEnd="10sp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
+
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -105,54 +108,59 @@
                             app:srcCompat="@drawable/glass" />
                     </FrameLayout>
                 </FrameLayout>
-                    <LinearLayout
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10sp"
+                    android:layout_weight="0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/deviceLabel"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="10sp"
-                        android:layout_weight="0"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:text="@string/markuse_arvuti_asjad"
+                        android:textSize="20sp" />
 
-                        <TextView
-                            android:id="@+id/deviceLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/markuse_arvuti_asjad"
-                            android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/editionLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:text="@string/unknown_edition"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/editionLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="10sp"
-                            android:text="@string/unknown_edition" />
-
-                        <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="1dp"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="1dp"
+                        android:textColor="?android:attr/textColorPrimary" />
+                </LinearLayout>
 
             </LinearLayout>
+
             <LinearLayout
-                android:layout_marginTop="10sp"
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/funktsioonid">
+                    android:text="@string/funktsioonid"
+                    android:textSize="20sp">
 
                 </TextView>
+
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10sp"
                     app:flexWrap="wrap">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -166,6 +174,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -175,6 +184,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -188,6 +198,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -197,6 +208,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -210,6 +222,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -219,6 +232,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -232,6 +246,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -241,6 +256,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -254,6 +270,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -263,6 +280,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -276,6 +294,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -285,6 +304,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -298,6 +318,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -307,6 +328,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -320,6 +342,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -329,6 +352,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -342,6 +366,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -351,6 +376,7 @@
 
                         </TextView>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -364,6 +390,7 @@
                             android:layout_height="40sp"
                             android:layout_weight="1"
                             app:srcCompat="@drawable/cross" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

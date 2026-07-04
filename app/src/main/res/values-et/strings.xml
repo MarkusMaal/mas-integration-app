@@ -100,4 +100,9 @@
     <string name="apply">Rakenda</string>
     <string name="markuse_arvuti_asjad">Markuse arvuti asjad</string>
     <string name="unknown_edition">Tundmatu väljaanne</string>
+    <string name="device_validation">Seadme valideerimine</string>
+    <string name="verification_code_notice">Arvuti ekraanile peaks ilmuma kontrollkood.\nSisestage see siia, et lisada seade valgesse nimekirja.\nKontrollkood sisaldab suurtähti ja numbreid ning on 8 tähemärgi pikkune.</string>
+    <string name="verification_code">Kontrollkood</string>
+    <string name="add_device">Lisa seade</string>
+    <string name="mac_address_message">\nSee on unikaalne identifikaator arvuti jaoks, mis on leitav võrgusätetes.\nMAC aadressi tunneb ära 6 kooloniga eraldatud sektsiooni järgi.</string>
 </resources>

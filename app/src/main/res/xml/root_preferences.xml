@@ -14,25 +14,20 @@
             app:defaultValue="@string/defaultPort"
             app:useSimpleSummaryProvider="true" />
 
-        <EditTextPreference
-            app:key="code"
-            app:title="@string/authcode"
-            app:defaultValue=""
-            app:useSimpleSummaryProvider="true" />
-
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/preference_category_wol">
         <EditTextPreference
+            app:defaultValue="00:00:00:00:00:00"
+            app:dialogMessage="@string/mac_address_message"
             app:key="wol-mac"
             app:title="@string/mac_address"
-            app:defaultValue="00:00:00:00:00:00"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
+            app:defaultValue="9"
             app:key="wol-port"
             app:title="@string/port"
-            app:defaultValue="9"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/preference_category_about">
         <EditTextPreference

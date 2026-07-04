@@ -45,10 +45,12 @@ public class AboutFragment extends Fragment {
         if (edition == null) {
             view.findViewById(R.id.textView).setVisibility(GONE);
             view.findViewById(R.id.error).setVisibility(VISIBLE);
+            view.findViewById(R.id.flexboxAbout).setVisibility(GONE);
             return;
         }
         view.findViewById(R.id.textView).setVisibility(VISIBLE);
         view.findViewById(R.id.error).setVisibility(GONE);
+        view.findViewById(R.id.flexboxAbout).setVisibility(VISIBLE);
         final FrameLayout editionGlass = view.findViewById(R.id.editionGlass);
         final TextView deviceLabel = view.findViewById(R.id.deviceLabel);
         final TextView editionLabel = view.findViewById(R.id.editionLabel);
