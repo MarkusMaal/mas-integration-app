@@ -111,4 +111,7 @@
     <string name="xxxxxxxx" translatable="false">XXXXXXXX</string>
     <string name="add_device">Add device</string>
     <string name="mac_address_message">\nThis is a unique identifier for your computer, which can be found in network settings.\nA MAC address can be identified by 6 blocks, which are separated with colons.</string>
+    <string name="error">Error</string>
+    <string name="failed_to_send_desktop_update_command">Failed to send desktop update command</string>
+    <string name="error_details">Error details:</string>
 </resources>

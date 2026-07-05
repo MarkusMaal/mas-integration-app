@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static ApiService apiService;
 
+    public static boolean Failed = false;
+
     public enum Tabs {
         WELCOME,
         MARKUSTATION,
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         var dr = new DeviceRequest();
         dr.setDeviceType(Welcome.checkIsTablet(ctx) ? "mta" : "mtel");
         enqueue(apiService.sendVerifyDeviceRequest(dr, code), s -> {
-        }, ctx);
+        }, ctx, e -> defaultError(e, ctx));
     }
 
     @Override
@@ -202,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     var dr = new DeviceRequest();
                     dr.setDeviceType(Welcome.checkIsTablet(ctx) ? "mta" : "mtel");
                     enqueue(apiService.sendAddDeviceRequest(dr), s -> {
-                    }, ctx);
+                    }, ctx, e -> defaultError(e, ctx));
                     Intent myIntent = new Intent(MainActivity.this, DeviceValidation.class);
                     MainActivity.this.startActivity(myIntent);
                 }
@@ -260,15 +262,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.progressBar).setVisibility(VISIBLE);
         switch (tab) {
             case ABOUT:
-                enqueue(apiService.getEdition(), e -> edition = e, this);
+                enqueue(apiService.getEdition(), e -> edition = e, this, err -> defaultError(err, this));
                 break;
             case MARKUSTATION:
-                enqueue(apiService.getMarkuStationConfig(), c -> markuStationConfig = c, this);
-                enqueue(apiService.getMarkuStationGames(), g -> markuStationGames = g, this);
+                enqueue(apiService.getMarkuStationConfig(), c -> markuStationConfig = c, this, err -> defaultError(err, this));
+                enqueue(apiService.getMarkuStationGames(), g -> markuStationGames = g, this, err -> defaultError(err, this));
                 break;
             case CONFIG:
-                enqueue(apiService.getConfig(), c -> config = c, this);
-                enqueue(apiService.getScheme(), s -> scheme = s, this);
+                enqueue(apiService.getConfig(), c -> config = c, this, err -> defaultError(err, this));
+                enqueue(apiService.getScheme(), s -> scheme = s, this, err -> defaultError(err, this));
                 var imv = (ImageView) findViewById(R.id.desktopBackground);
                 var iml = (ImageView) findViewById(R.id.loginBackground);
                 var imu = (ImageView) findViewById(R.id.uncommonBackground);
@@ -293,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case DESKTOP:
-                enqueue(apiService.getDesktopLayout(), d -> desktopLayout = d, this);
+                enqueue(apiService.getDesktopLayout(), d -> desktopLayout = d, this, err -> defaultError(err, this));
                 break;
         }
     }
@@ -347,10 +349,12 @@ public class MainActivity extends AppCompatActivity {
         var desktopCommand = new DesktopCommand();
         desktopCommand.setArguments(args);
         desktopCommand.setType(type);
-        enqueue(apiService.sendDesktopCommand(desktopCommand), null, ctx);
+        enqueue(apiService.sendDesktopCommand(desktopCommand), null, ctx, e -> {
+            DialogBuilders.showAlert(ctx, ctx.getString(R.string.failed_to_send_desktop_update_command), ctx.getString(R.string.error_details) + "\n" + e.getMessage());
+        });
     }
 
-    private static <T> void enqueue(Call<T> call, Consumer<T> onSuccess, Context context) {
+    private static <T> void enqueue(Call<T> call, Consumer<T> onSuccess, Context context, Consumer<Throwable> onFailure) {
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<T> call,
@@ -367,14 +371,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<T> call,
                                   @NonNull Throwable t) {
-                Log.println(Log.ERROR, "API request failed", Objects.requireNonNull(t.getMessage()));
-                if (context instanceof MainActivity) {
-                    ((MainActivity)context).findViewById(R.id.progressBar).setVisibility(GONE);
-                }
-                if (onSuccess == null) return;
-                onSuccess.accept(null);
+                onFailure.accept(t);
             }
         });
+    }
+
+    private static void defaultError(Throwable t, Context context) {
+        Log.println(Log.ERROR, "API request failed", Objects.requireNonNull(t.getMessage()));
+        if (context instanceof MainActivity) {
+            if (!Failed) {
+                Failed = true;
+                DialogBuilders.showAlert(context, context.getString(R.string.error), t.getMessage());
+            }
+            ((MainActivity)context).findViewById(R.id.progressBar).setVisibility(GONE);
+        }
     }
 
     public void refresh(View view) {
@@ -407,15 +417,15 @@ public class MainActivity extends AppCompatActivity {
     public static void saveConfig(Tabs tab, Context ctx) {
         switch (tab) {
             case CONFIG:
-                enqueue(apiService.saveCommonConfig(config), cc -> config = cc, ctx);
-                enqueue(apiService.saveScheme(scheme), s -> scheme = s, ctx);
+                enqueue(apiService.saveCommonConfig(config), cc -> config = cc, ctx, err -> defaultError(err, ctx));
+                enqueue(apiService.saveScheme(scheme), s -> scheme = s, ctx, err -> defaultError(err, ctx));
                 break;
             case MARKUSTATION:
-                enqueue(apiService.saveMarkuStationConfig(markuStationConfig), mc -> markuStationConfig = mc, ctx);
-                enqueue(apiService.saveMarkuStationGames(markuStationGames), mg -> markuStationGames = mg, ctx);
+                enqueue(apiService.saveMarkuStationConfig(markuStationConfig), mc -> markuStationConfig = mc, ctx, err -> defaultError(err, ctx));
+                enqueue(apiService.saveMarkuStationGames(markuStationGames), mg -> markuStationGames = mg, ctx, err -> defaultError(err, ctx));
                 break;
             case DESKTOP:
-                enqueue(apiService.saveDesktopLayout(desktopLayout), dl -> desktopLayout = dl, ctx);
+                enqueue(apiService.saveDesktopLayout(desktopLayout), dl -> desktopLayout = dl, ctx, err -> defaultError(err, ctx));
                 break;
         }
     }
@@ -449,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
                     desktopCommand.setType("Lock");
                     desktopLayout.setLockIcons(cb.isChecked());
                 }
-                enqueue(apiService.sendDesktopCommand(desktopCommand), null, this);
+                enqueue(apiService.sendDesktopCommand(desktopCommand), null, this, err -> defaultError(err, this));
             }
         } catch (NullPointerException e) {
             var msg = e.getMessage();

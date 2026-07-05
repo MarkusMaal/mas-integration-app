@@ -105,4 +105,7 @@
     <string name="verification_code">Kontrollkood</string>
     <string name="add_device">Lisa seade</string>
     <string name="mac_address_message">\nSee on unikaalne identifikaator arvuti jaoks, mis on leitav võrgusätetes.\nMAC aadressi tunneb ära 6 kooloniga eraldatud sektsiooni järgi.</string>
+    <string name="error">Viga</string>
+    <string name="failed_to_send_desktop_update_command">Töölaua uuendamise käsu saatmine nurjus</string>
+    <string name="error_details">Vea üksikasjad:</string>
 </resources>

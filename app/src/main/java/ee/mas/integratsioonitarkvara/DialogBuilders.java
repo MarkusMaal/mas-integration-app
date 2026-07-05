@@ -116,4 +116,18 @@ public class DialogBuilders {
     private static void removeElement(Object[] arr, int removedIdx) {
         System.arraycopy(arr, removedIdx + 1, arr, removedIdx, arr.length - 1 - removedIdx);
     }
+
+    public static void showAlert(Context ctx, String title, String message) {
+        new AlertDialog.Builder(ctx)
+                .setTitle(title)
+                .setMessage(message)
+
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    MainActivity.Failed = false;
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setIconAttribute(android.R.attr.alertDialogIcon)
+                .show();
+    }
 }
