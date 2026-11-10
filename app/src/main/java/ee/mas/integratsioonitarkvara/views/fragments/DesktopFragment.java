@@ -3,14 +3,11 @@ package ee.mas.integratsioonitarkvara.views.fragments;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +20,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 import ee.mas.integratsioonitarkvara.DialogBuilders;
 import ee.mas.integratsioonitarkvara.R;
@@ -123,8 +118,7 @@ public class DesktopFragment extends Fragment {
             icon.put("Executable", i.getExecutable());
             icons.add(icon);
         }
-        SimpleAdapter sa = new SimpleAdapter(view.getContext().getApplicationContext(), icons, android.R.layout.simple_expandable_list_item_2, new String[] {"Icon", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
-        return sa;
+        return new SimpleAdapter(view.getContext(), icons, android.R.layout.simple_expandable_list_item_2, new String[] {"Icon", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
     }
 
 

@@ -83,12 +83,16 @@ public class DialogBuilders {
         ad.show();
     }
 
-    public static void showColorPickerDialog(Context context, Consumer<ee.mas.integratsioonitarkvara.models.Color> onOk, Scheme scheme) {
-        var c = Color.valueOf(scheme.getBackgroundColor().getR() / 255f, scheme.getBackgroundColor().getG() / 255f, scheme.getBackgroundColor().getB() / 255f, scheme.getBackgroundColor().getA() / 255f);
+    public static void showColorPickerDialog(Context context, Consumer<ee.mas.integratsioonitarkvara.models.Color> onOk, Scheme scheme, boolean isBackgroundColor) {
+        var c = Color.valueOf(
+                (isBackgroundColor ? scheme.getBackgroundColor().getR() : scheme.getForegroundColor().getR()) / 255f,
+                (isBackgroundColor ? scheme.getBackgroundColor().getG() : scheme.getForegroundColor().getG()) / 255f,
+                (isBackgroundColor ? scheme.getBackgroundColor().getB() : scheme.getForegroundColor().getB()) / 255f,
+                (isBackgroundColor ? scheme.getBackgroundColor().getA() : scheme.getForegroundColor().getA()) / 255f);
         ColorPickerPopUp colorPickerPopUp = new ColorPickerPopUp(context);
         colorPickerPopUp.setShowAlpha(false)
                 .setDefaultColor(c.toArgb())
-                .setDialogTitle(context.getString(R.string.vali_taustav_rv))
+                .setDialogTitle(context.getString(isBackgroundColor ? R.string.vali_taustav_rv : R.string.vali_esiplaani_v_rv))
                 .setOnPickColorListener(new ColorPickerPopUp.OnPickColorListener() {
                     @Override
                     public void onColorPicked(int color) {

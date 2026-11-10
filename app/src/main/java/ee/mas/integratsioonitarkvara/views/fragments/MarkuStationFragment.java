@@ -97,6 +97,6 @@ public class MarkuStationFragment extends Fragment {
                 gamesList.add(game);
             }
         }
-        return new SimpleAdapter(view.getContext().getApplicationContext(), gamesList, android.R.layout.simple_list_item_2, new String[] {"Title", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
+        return new SimpleAdapter(view.getContext(), gamesList, android.R.layout.simple_list_item_2, new String[] {"Title", "Executable"}, new int[] {android.R.id.text1, android.R.id.text2});
     }
 }

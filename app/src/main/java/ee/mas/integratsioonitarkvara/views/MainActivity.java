@@ -396,10 +396,10 @@ public class MainActivity extends AppCompatActivity {
         if (v instanceof Button) {
             var b = (Button)v;
             if (b.getId() == R.id.bgButton) {
-                DialogBuilders.showColorPickerDialog(this, c -> scheme.setBackgroundColor(c), scheme);
+                DialogBuilders.showColorPickerDialog(this, c -> scheme.setBackgroundColor(c), scheme, true);
                 saveConfig(MainActivity.Tabs.CONFIG, v.getContext());
             } else if (b.getId() == R.id.fgButton) {
-                DialogBuilders.showColorPickerDialog(this, c -> scheme.setForegroundColor(c), scheme);
+                DialogBuilders.showColorPickerDialog(this, c -> scheme.setForegroundColor(c), scheme, false);
                 saveConfig(MainActivity.Tabs.CONFIG, v.getContext());
             }
         }

@@ -15,7 +15,7 @@
                 android:endY="108"
                 android:tileMode="clamp">
                 <item
-                    android:color="#3a3a9a"
+                    android:color="#3a3aaa"
                     android:offset="0" />
                 <item
                     android:color="#101020"
